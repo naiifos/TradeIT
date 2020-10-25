@@ -8,6 +8,10 @@ export default class Test extends Component {
       searchText: text,
       spinnerVisibility: true,
     });
+        // ? After you've done to implement your use-case
+    // ? Do not forget to set false to spinner's visibility
+        // ? After you've done to implement your use-case
+    // ? Do not forget to set false to spinner's visibility
 
     // ? After you've done to implement your use-case
     // ? Do not forget to set false to spinner's visibility
@@ -15,7 +19,7 @@ export default class Test extends Component {
       spinnerVisibility: false,
     });
   };
-
+/*chganges*/ 
   render() {
     const { spinnerVisibility } = this.state;
     return (
