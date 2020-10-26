@@ -11,7 +11,7 @@ export default function Card({ title, state, image, location, onPress }) {
   return (
     <>
       <TouchableOpacity onPress={onPress} style={styles.card}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row" }} >
           <View style={styles.cardImage}>
             <Image
               style={{ width: "100%", height: "100%", borderRadius: 20 }}

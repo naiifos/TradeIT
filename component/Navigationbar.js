@@ -11,6 +11,7 @@ import Trade from '../screens/Trade';
 import Create from '../screens/Create';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
+import TradeInfo from '../screens/TradeInfo';
 
 
 const CreateStack = createStackNavigator();
@@ -38,15 +39,16 @@ function CreateStackScreen() {
 }
 
 const TradeStack = createStackNavigator();
-
 function TradeStackScreen() {
     return (
-        <TradeStack.Navigator>
+
+        <TradeStack.Navigator initialRouteName="Trade">
             <TradeStack.Screen name="Trade" component={Trade}
                 options={{
                     headerStyle: {
                         backgroundColor: '#f7287b',
                     },
+
                     headerTitleStyle: {
                         position: 'absolute',
                         color: 'white',
@@ -56,9 +58,31 @@ function TradeStackScreen() {
 
                     },
                 }} />
+            <TradeStack.Screen name="TradeInfo" component={TradeInfo}
+                options={{
+                    title: 'Trade Info',
+                    headerStyle:
+                    {
+                        backgroundColor: '#f7287b',
+                    },
+                    headerTitleStyle:
+                    {
+                        color: 'white',
+                        fontWeight: 'bold',
+                         marginTop:4,
+                         fontSize:20,
+                        
+                    },
+                    headerTintColor: '#fff',
+                  
+                }}
+            />
+
         </TradeStack.Navigator>
     );
 }
+
+
 
 const ProfileStack = createStackNavigator();
 
@@ -112,6 +136,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
     return (
         <NavigationContainer  >
+
             <Tab.Navigator initialRouteName="Trade"
                 tabBarOptions={{
                     activeTintColor: '#e91e63',
@@ -132,6 +157,7 @@ export default function App() {
                         ),
                     }}
                 />
+
                 <Tab.Screen name="Profile" component={ProfileStackScreen}
                     options={{
                         tabBarLabel: 'Profile',
@@ -149,6 +175,7 @@ export default function App() {
                     }}
                 />
             </Tab.Navigator>
+
         </NavigationContainer>
     )
 }
