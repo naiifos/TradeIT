@@ -1,12 +1,19 @@
-// RootNavigation.js
+import { createStackNavigator } from '@react-navigation/stack';
+import {createSwitchNavigator} from 'react-navigation';
+import AuthScreen from '../user/AuthScreen';
+import Trade from '../screens/Trade';
 
-import * as React from 'react';
+const AuthNavigator = createStackNavigator({
+    Auth: AuthScreen
+});
+const TradeNavigator = createStackNavigator({
+    Trade:Trade
+});
 
-export const navigationRef = React.createRef();
+const MainNavigator = createSwitchNavigator({
+    Auth:AuthNavigator,
+    Trade:TradeNavigator
 
-export function navigate(name, params) {
-    navigationRef.current?.navigate(name, params);
-}
+});
 
-// add other navigation functions that you need and export them
- 
+export default RootNavigation(MainNavigator);

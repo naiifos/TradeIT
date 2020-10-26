@@ -1,36 +1,87 @@
-
-/*i
 import React from 'react';
-import {ScrollView,StyleSheet,View,KeyboardAvoidingView} from "react-native";
-import {createAppContainer,createSwitchNavigator} from "react-navigation";
-
-import LoginScreen from '../screens/LoginScreen'
-import LoadingScreen from '../screens/LoadingScreen'
-import DashboardScreen from '../screens/DashboardScreen'
-
-import * as firebase from 'firebase';
-import {firebaseConfig} from "../config";
-import {NavigationContainer} from "@react-navigation/native";
-import Trade from '../screens/Trade';
-
-
-if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig);
-}
+import {
+    ScrollView,
+    View,
+    KeyboardAvoidingView,
+    StyleSheet,
+    Button,
+    TextInput
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Input from './Input';
+import Card from './Card';
 
 
+const AuthScreen = props => {
+    return <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={50}
+        style={styles.screen}
+    >
+        <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+            <Card style={styles.authContainer}>
+                <ScrollView>
+                    <Input
+                        id="email"
+                        label="E-Mail"
+                        keyboardType="email-address"
+                        required
+                        email
+                        autoCapitalize="none"
+                        errorMessage="Please enter a valid email address."
+                        onInputChange={() => { }}
+                        initialValue=""
+                    />
+                    <Input
+                        id="password"
+                        label="Password"
+                        keyboardType="default"
+                        secureTextEntry
+                        required
+                        minLength={5}
+                        autoCapitalize="none"
+                        errorMessage="Please enter a valid password."
+                        onInputChange={() => { }}
+                        initialValue=""
+                    />
+                    <View style={styles.buttonContainer}>
+                        <Button title="Login" color={"#ff0000"} onPress={() => { }} />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title="Switch to Sign Up"
+                            color={"#808080"}
+                            onPress={() => { }}
+                        />
+                    </View>
+                </ScrollView>
+            </Card>
+        </LinearGradient>
+    </KeyboardAvoidingView>
+};
 
-const AppSwitchNavigator=createSwitchNavigator({
-    LoadingScreen:LoadingScreen,
-    LoginScreen:LoginScreen,
-    DashboardScreen:DashboardScreen,
-    Trade:Trade
-})
+AuthScreen.navigationOptions = {
+    headerTitle: 'Authenticate'
+};
 
-const AppNavigator = createAppContainer(AppSwitchNavigator)
-export function AuthScreen(){
-    return (
-         <AppNavigator/>
-    )
-}
-*/
+const styles = StyleSheet.create({
+    screen: {
+        flex: 1
+    },
+    gradient: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    authContainer: {
+        width: '80%',
+        maxWidth: 400,
+        maxHeight: 400,
+        padding: 20
+      },
+    buttonContainer: {
+        marginTop: 10
+    }
+});
+
+export default AuthScreen;
