@@ -8,8 +8,11 @@ import { useNavigation } from "@react-navigation/native";
 export default function Trade() {
 
     const navigation = useNavigation()
-    const slides = {
+    const iconTrade = {
         icon: require('../assets/favicon.png')
+    }
+    const iconProfile = {
+        icon: require('../assets/splash.png')
     }
     const tradePage = () => {
         navigation.navigate('TradeInfo')
@@ -17,8 +20,8 @@ export default function Trade() {
     return (
         <View >
 
-            <Card title="Ballon" image={slides.icon} state="Used" location="Brussels-Belgium" onPress={tradePage} />
-            <Card title="Ojos" image={slides.icon} state="New" location="Brussels-Belgium" onPress={tradePage} />
+            <Card title="Ballon" image={iconTrade.icon} nameUser="Sofian" state="Used" location="Brussels-Belgium" onPress={tradePage} />
+            <Card title="Ojos" image={iconTrade.icon} nameUser="Moundir" state="New" location="Brussels-Belgium" onPress={tradePage} />
 
         </View>
     );

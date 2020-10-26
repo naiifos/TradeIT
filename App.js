@@ -2,9 +2,8 @@
 import Navigationbar from './component/Navigationbar';
 import Header from './component/Header';
 import React from 'react';
-import {Text, View,StyleSheet} from 'react-native';
-import {StatusBar} from "expo-status-bar";
-
+import { Text, View, StyleSheet } from 'react-native';
+import { StatusBar } from "expo-status-bar";
 
 
   export default function App() {

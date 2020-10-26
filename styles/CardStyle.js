@@ -120,9 +120,21 @@ export const styles = StyleSheet.create({
   },
 
   cardImage: {
+    
+    flex: 0.3,
+  },
+  cardProfile: {
     flex: 0.3,
   },
 
+  nameUser :{
+    position:'absolute',
+    left: '40%',
+
+    top: '5%',
+    fontWeight:'bold'
+
+  },
   smallButton: {
     width: 40,
     height: 40,
