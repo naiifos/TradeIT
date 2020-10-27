@@ -12,6 +12,8 @@ import Create from '../screens/Create';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 import TradeInfo from '../screens/TradeInfo';
+import ChatBox from '../screens/ChatBox';
+
 
 
 const CreateStack = createStackNavigator();
@@ -65,16 +67,40 @@ function TradeStackScreen() {
                     {
                         backgroundColor: '#f7287b',
                     },
+
                     headerTitleStyle:
                     {
                         color: 'white',
                         fontWeight: 'bold',
-                         marginTop:4,
-                         fontSize:20,
-                        
+                        marginTop: 4,
+                        fontSize: 20,
+
                     },
                     headerTintColor: '#fff',
-                  
+                    headerTitle: false,
+                    headerTransparent: true,
+
+                }}
+            />
+            <TradeStack.Screen name="ChatBox" component={ChatBox}
+                options={{
+                    title: 'Chat Box',
+                    headerStyle:
+                    {
+                        backgroundColor: '#f7287b',
+                    },
+
+                    headerTitleStyle:
+                    {
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginTop: 4,
+                        fontSize: 20,
+
+                    },
+                    headerTintColor: '#fff',
+                    
+
                 }}
             />
 
