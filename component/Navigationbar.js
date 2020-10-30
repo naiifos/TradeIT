@@ -13,7 +13,6 @@ import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 import TradeInfo from '../screens/TradeInfo';
 
-
 const CreateStack = createStackNavigator();
 
 function CreateStackScreen() {
@@ -31,7 +30,6 @@ function CreateStackScreen() {
                         left: -170,
                         top: -10,
                         fontSize: 25
-
                     },
                 }} />
         </CreateStack.Navigator>
@@ -71,10 +69,10 @@ function TradeStackScreen() {
                         fontWeight: 'bold',
                          marginTop:4,
                          fontSize:20,
-                        
+
                     },
                     headerTintColor: '#fff',
-                  
+
                 }}
             />
 

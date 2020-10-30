@@ -21,6 +21,9 @@ const AuthScreen = ({navigation}) => {
     const signupHandler = () => {
         authActions.signup(
             email,
+            pwd
+        );
+    };
 
     return <KeyboardAvoidingView
         behavior="padding"
