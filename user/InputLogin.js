@@ -22,7 +22,7 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = props => {
+const InputLogin = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
     isValid: props.initiallyValid,
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Input;
+export default InputLogin;

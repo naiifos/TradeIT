@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useReducer, useCallback, useState} from 'react';
 import {
     ScrollView,
     View,
@@ -7,32 +7,43 @@ import {
     Button,
     TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Input from './Input';
-import Card from './Card';
+import {LinearGradient} from 'expo-linear-gradient';
+import CardLogin from '../user/CardLogin';
+import * as authActions from './action/Auth';
+import Text from "react-native-paper/src/components/Typography/Text";
+import LoginScreen from "./LoginScreen";
 
+const AuthScreen = ({navigation}) => {
 
-const AuthScreen = props => {
+    const [email,setEmail]=React.useState('');
+    const [pwd,setPwd]=React.useState('');
+
+    const signupHandler = () => {
+        authActions.signup(
+            email,
+
     return <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={50}
         style={styles.screen}
     >
         <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
-            <Card style={styles.authContainer}>
+            <CardLogin style={styles.authContainer}>
                 <ScrollView>
-                    <Input
+                    <Text style={styles.text}>E-Mail</Text>
+                    <TextInput style={styles.textinput}
                         id="email"
                         label="E-Mail"
                         keyboardType="email-address"
                         required
                         email
                         autoCapitalize="none"
-                        errorMessage="Please enter a valid email address."
-                        onInputChange={() => { }}
+                        errorText="Please enter a valid email address."
+                        onChangeText={text => setEmail(text)}
                         initialValue=""
                     />
-                    <Input
+                    <Text style={styles.text}>Password</Text>
+                    <TextInput style={styles.textinput}
                         id="password"
                         label="Password"
                         keyboardType="default"
@@ -40,28 +51,24 @@ const AuthScreen = props => {
                         required
                         minLength={5}
                         autoCapitalize="none"
-                        errorMessage="Please enter a valid password."
-                        onInputChange={() => { }}
+                        errorText="Please enter a valid password."
+                        onChangeText={text => setPwd(text)}
                         initialValue=""
                     />
                     <View style={styles.buttonContainer}>
-                        <Button title="Login" color={"#ff0000"} onPress={() => { }} />
+                        <Button title="Login" color={"#ff0000"} onPress={signupHandler}/>
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Switch to Sign Up"
+                            title="Switch to Log In"
                             color={"#808080"}
-                            onPress={() => { }}
+                            onPress={() => {navigation.navigate('LoginScreen')}}
                         />
                     </View>
                 </ScrollView>
-            </Card>
+            </CardLogin>
         </LinearGradient>
     </KeyboardAvoidingView>
-};
-
-AuthScreen.navigationOptions = {
-    headerTitle: 'Authenticate'
 };
 
 const styles = StyleSheet.create({
@@ -78,10 +85,15 @@ const styles = StyleSheet.create({
         maxWidth: 400,
         maxHeight: 400,
         padding: 20
-      },
+    },
     buttonContainer: {
         marginTop: 10
+    },
+    text:{
+        padding: 20,
+    },
+    textinput:{
+        borderBottomWidth:2,
     }
 });
-
 export default AuthScreen;
