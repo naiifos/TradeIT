@@ -7,7 +7,18 @@ import UserPhotoName from "../component/UserPhotoName";
 
 export default function Card({ title, state, name, image, location, onPress }) {
 
+  const compactLocation = compactWord(location)
 
+  function compactWord(word) {
+
+
+    if (word.length > 15) {
+
+      var res = word.substr(0, 15);
+      return res += "...";
+    }
+    return word
+  };
   const iconTrade = {
     icon: require('../assets/favicon.png')
   }
@@ -24,11 +35,10 @@ export default function Card({ title, state, name, image, location, onPress }) {
             <Text style={styles.cardTitle}>{title}</Text>
 
             <Text style={styles.cardDescription}>{state}</Text>
-            <View style={{flexDirection: "row" }}>
 
-              <Text style={styles.cardLocation}>{location}</Text>
-            </View>
+            <Text style={styles.cardLocation}>{compactLocation}</Text>
           </View>
+
           <View style={styles.cardImage}>
             <Image
               style={{ width: "100%", height: "100%", borderRadius: 20 }}
