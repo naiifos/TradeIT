@@ -2,8 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import createSwitchNavigator from 'react-navigation-animated-switch';
 import {Transition} from 'react-native-reanimated';
 import AuthScreen from '../screens/AuthScreen';
-import LoginScreen from '../screens/LoginScreen';
-import Trade from '../screens/Trade';
+import Home from '../screens/Home';
 import React from "react";
 import {NavigationContainer} from "@react-navigation/native";
 
@@ -22,17 +21,11 @@ export default function AuthStack() {
                     options={{title: 'Sign Up'}}
                 />
                 <Stack.Screen
-                    name="LoginScreen"
-                    component={LoginScreen}
-                    options={{title: 'Log In'}}
-                />
-                <Stack.Screen
-                    name="Trade"
-                    component={Trade}
-                    options={{title: 'Trade'}}
+                    name="Home"
+                    component={Home}
+                    options={{title: 'Home'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
-

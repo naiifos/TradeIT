@@ -11,20 +11,48 @@ import {LinearGradient} from 'expo-linear-gradient';
 import CardLogin from '../user/CardLogin';
 import * as authActions from './action/Auth';
 import Text from "react-native-paper/src/components/Typography/Text";
-import LoginScreen from "./LoginScreen";
+import {useNavigation} from "@react-navigation/native";
+import Auth from "./action/Auth";
+import Login from './action/Login'
 
-const AuthScreen = ({navigation}) => {
-
+const AuthScreen = () => {
+    const navigation = useNavigation();
+    const auth = Auth();
+    const login = Login();
     const [email,setEmail]=React.useState('');
     const [pwd,setPwd]=React.useState('');
+    const [isSignUp,setIsSignUp]=React.useState(false);
 
-    const signupHandler = () => {
-        authActions.signup(
-            email,
-            pwd
-        );
+    const authHandler = () => {
+        if(isSignUp){
+           signupHandler();
+        }
+        else{
+            signinHandler();
+
+        }
+        async function   signupHandler() {
+            const response = await auth(email, pwd)
+            if (response.status != 200) {
+                throw new Error('Something went wrong in the auth screen!');
+            }
+            else{
+                navigation.navigate('Trade');
+            }
+
+        }
+        async function   signinHandler() {
+            alert("login page");
+            const response = await login(email, pwd)
+            if (response.status != 200) {
+                throw new Error('Something went wrong in the login screen!');
+            }
+            else{
+                navigation.navigate('Trade');
+            }
+
+        }
     };
-
     return <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={50}
@@ -59,13 +87,15 @@ const AuthScreen = ({navigation}) => {
                         initialValue=""
                     />
                     <View style={styles.buttonContainer}>
-                        <Button title="Login" color={"#ff0000"} onPress={signupHandler}/>
+                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler}/>
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Switch to Log In"
+                            title={`Switch to ${isSignUp ? 'Login' : 'Sign Up'}` }
                             color={"#808080"}
-                            onPress={() => {navigation.navigate('LoginScreen')}}
+                            onPress={() => {
+                                setIsSignUp(isSignUp => !isSignUp);
+                            }}
                         />
                     </View>
                 </ScrollView>

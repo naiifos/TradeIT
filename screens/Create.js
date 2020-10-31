@@ -1,4 +1,4 @@
-import React, { useState,Compo } from 'react';
+import React, { useState,useEffect,Compo } from 'react';
 import {StatusBar} from "expo-status-bar";
 import {
     View,
@@ -16,10 +16,24 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from '../component/ImagePicker';
 import Input from '../component/Input';
 import { render } from 'react-dom';
-
-
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 const Create = () => 
 {
+   
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                let latitude  = JSON.stringify(position.coords.latitude)
+                let longitude =JSON.stringify(position.coords.longitude)
+
+                // alert(latitude + " // " + longitude);
+                // Add request to DB  HERE - Push the latitude and longitude of the users position
+            },
+            (error) => console.log(JSON.stringify(error)),
+            {enableHighAccuracy: Platform.OS != 'android',  maximumAge: 2000 }
+        );
+      });
+     
     const [form, setForm] = useState({
         title: "",
         location: "",
@@ -30,10 +44,7 @@ const Create = () =>
     const getTradeData = () => {
         alert(form.title + " " + form.location+ " " +  form.description + "" + pickState);
       }
-    const pressHandler= () =>{
-
-        console.log(form)
-    }
+ 
     const Separator = () => (
         <View style={styles.separator} />
     );
