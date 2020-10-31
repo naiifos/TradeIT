@@ -17,21 +17,8 @@ import TradeInfo from '../screens/TradeInfo';
 import ChatBox from '../screens/ChatBox';
 import {createSwitchNavigator} from "react-navigation";
 
+//const AuthStack = createSwitchNavigator({Auth:AuthScreen,Trade:Trade });
 
-const AuthStack = createStackNavigator();
-function AuthSwitchScreen(){
-    return (
-        <AuthStack.Navigator>
-            <AuthStack.Screen
-                name="Auth" component={AuthScreen}
-            />
-            <AuthStack.screen
-                name="Trade" component={Trade}
-            />
-
-        </AuthStack.Navigator>
-    )
-}
 
 const CreateStack = createStackNavigator();
 function CreateStackScreen() {
@@ -179,11 +166,11 @@ export default function App() {
     return (
         <NavigationContainer  >
 
-            <Tab.Navigator initialRouteName="Auth"
+            <Tab.Navigator initialRouteName="Create"
                            tabBarOptions={{
                                activeTintColor: '#e91e63',
                            }}>
-                <Tab.screen name ="Auth" component={AuthSwitchScreen}/>
+
 
                 <Tab.Screen name="Create" component={CreateStackScreen}
                             options={{

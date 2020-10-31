@@ -29,7 +29,6 @@ const AuthScreen = () => {
         }
         else{
             signinHandler();
-
         }
         async function   signupHandler() {
             const response = await auth(email, pwd)
