@@ -9,6 +9,7 @@ import {
     StatusBar,
     Platform,
 } from 'react-native';
+
 import HeaderImageScrollView, {
     TriggeringView,
 } from 'react-native-image-header-scroll-view';
