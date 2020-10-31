@@ -14,13 +14,13 @@ export default function Trade() {
     }
     const [tradesAdverts, setTrades] = useState([
         /* Pull the data from DB, get all the trades adverts and store them in to tradesAdverts hook*/
-        { title: 'Ballon', state: 'Use', image: iconTrade.icon, location: 'Rue Claessens 21', name: 'Sofian', description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ', id: '1' },
+        { title: 'Ballon', state: 'Use', image: iconTrade.icon, location: 'Rue Claessens, 21', name: 'Sofian', description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ', id: '1' },
         {
             title: 'Bateau', state: 'New', image: iconTrade.icon, location: 'Liege-Belgium', name: 'Moundir',
             description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ',
             id: '2'
         },
-        { title: 'Chaussure', state: 'New', image: iconTrade.icon, location: 'Brussels-Belgium', name: 'Mohamed', description: 'hollaaaqq', id: '3' },
+        { title: 'Chaussuressss', state: 'New', image: iconTrade.icon, location: 'Brussels-Belgium', name: 'Mohamed', description: 'hollaaaqq', id: '3' },
 
     ]);
 
@@ -28,6 +28,7 @@ export default function Trade() {
 
         const jsonName = JSON.stringify(item.name)
         const name_ = jsonName.match(/[a-zA-Z]+/g);
+      
         navigation.navigate('TradeInfo', {
 
             title: item.title,
@@ -38,6 +39,8 @@ export default function Trade() {
             id: item.id,
             description: item.description,
         });
+
+        /* ajouter l'algo pour laisser que 13 caracheteres de la localisation */ 
 
     }
 
