@@ -14,6 +14,7 @@ import Text from "react-native-paper/src/components/Typography/Text";
 import {useNavigation} from "@react-navigation/native";
 import Auth from "./action/Auth";
 import Login from './action/Login'
+import * as firebase from "firebase";
 
 const AuthScreen = () => {
     const navigation = useNavigation();

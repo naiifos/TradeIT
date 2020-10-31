@@ -1,11 +1,11 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyCmneCN98G7Z1F6IxX1StrgA-V21s2ywnA",
-    authDomain: "trade-it-e0cec.firebaseapp.com",
-    databaseURL: "https://trade-it-e0cec.firebaseio.com",
-    projectId: "trade-it-e0cec",
-    storageBucket: "trade-it-e0cec.appspot.com",
-    messagingSenderId: "307766767212",
-    appId: "1:307766767212:web:b0b5a7ee98e6345c9cb249",
-    measurementId: "G-6RN2CLSGT7"
+    apiKey: "AIzaSyDdx5rdaz5zVnbUnrDVZJqxMUVkW-xI9KU",
+    authDomain: "trade-it-4962e.firebaseapp.com",
+    databaseURL: "https://trade-it-4962e.firebaseio.com",
+    projectId: "trade-it-4962e",
+    storageBucket: "trade-it-4962e.appspot.com",
+    messagingSenderId: "693815707615",
+    appId: "1:693815707615:web:57c519677914839929266a",
+    measurementId: "G-GMPFDQKKGQ"
 };
 
