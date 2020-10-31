@@ -20,7 +20,7 @@ export default function Trade() {
             description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ',
             id: '2'
         },
-        { title: 'Chaussure', state: 'New', image: iconTrade.icon, location: 'Brussels-Belgium', name: 'Mohamed', description: 'hollaaaqq', id: '3' },
+        { title: 'Chaussuressss', state: 'New', image: iconTrade.icon, location: 'Brussels-Belgium', name: 'Mohamed', description: 'hollaaaqq', id: '3' },
 
     ]);
 
