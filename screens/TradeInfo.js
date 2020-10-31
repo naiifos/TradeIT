@@ -98,6 +98,7 @@ export default function TradeInfo({ route }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
                         <Text style={styles.title}>{name}</Text>
+                      
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                             <FontAwesome name="star" size={16} color="#FF6347" />
 
@@ -105,6 +106,11 @@ export default function TradeInfo({ route }) {
                             <Text>{state}</Text>
                         </View>
                     </View>
+                   
+                        <Text style={styles.adress}>{location}</Text>
+                      
+                   
+                    
                 </TriggeringView>
                 <View style={[styles.section]}>
                     <Text style={styles.sectionContent}>{description}</Text>
@@ -162,7 +168,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold',
     },
-
+    adress: {
+        fontSize: 15,
+        marginTop:10,
+    },
     section: {
         padding: 20,
         borderBottomWidth: 1,
