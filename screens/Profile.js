@@ -1,18 +1,10 @@
-import {Text, View} from "react-native";
-import {StatusBar} from "expo-status-bar";
 import React from "react";
-import {AuthScreen} from "../user/AuthScreen";
+import AuthScreen from "./AuthScreen";
+import AuthStack from "../routes/RootNavigation";
+import { Text, View, StyleSheet } from 'react-native';
 
-
-          /*  I WILL CODE HERE 
-
-          new code to add here 
-          
-          */
 export default function Profile() {
     return (
-        <View > 
-             
-        </View>
+             <View/>
     );
 }

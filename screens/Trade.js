@@ -1,11 +1,10 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Text, TextInput, View, Image, FlatList, StyleSheet } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { Button } from "react-native";
 import Card from "../component/Card";
 import { useNavigation } from "@react-navigation/native";
+import Navigationbar from "../component/Navigationbar";
 import filter from 'lodash.filter';
 
 export default function Trade() {
@@ -28,7 +27,7 @@ export default function Trade() {
 
         const jsonName = JSON.stringify(item.name)
         const name_ = jsonName.match(/[a-zA-Z]+/g);
-      
+
         navigation.navigate('TradeInfo', {
 
             title: item.title,
@@ -40,7 +39,7 @@ export default function Trade() {
             description: item.description,
         });
 
-        /* ajouter l'algo pour laisser que 13 caracheteres de la localisation */ 
+        /* ajouter l'algo pour laisser que 13 caracheteres de la localisation */
 
     }
 
