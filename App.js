@@ -10,7 +10,7 @@ import Navigationbar from "./component/Navigationbar";
 export default function App() {
     return (
         <View style={style.container}>
-            <Navigationbar/>
+            <AuthStack/>
         </View>
     )
 }
