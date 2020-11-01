@@ -9,18 +9,50 @@ import * as firebase from "firebase";
 import {Image, Text, View} from "react-native";
 import Navigationbar from "../component/Navigationbar";
 import {firebaseConfig} from "../config";
+import Trade from "../screens/Trade";
+
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+//const user=firebase.auth().currentUser;
+const user = firebase.auth().currentUser;
+
 
 const Stack = createStackNavigator();
-firebase.initializeApp(firebaseConfig);
-const user=firebase.auth().currentUser;
-
 export default function AuthStack() {
-    return (
-        <NavigationContainer>
+    if (user === null) {
+        return (
+            <NavigationContainer>
+
+                <Stack.Navigator
+                    initialRouteName="Auth"
+                    screenOptions={{gestureEnabled: false}}
+                >
+                    <Stack.Screen
+                        name="Auth"
+                        component={AuthScreen}
+                        options={{title: 'Authenticate'}}
+                    />
 
 
-            {!user ?(
+                </Stack.Navigator>
+            </NavigationContainer>
+        );
+    } else {
+        alert(" value of user  = " + user)
+        alert("into false condition ")
 
+        return (
+                <Navigationbar/>
+
+        );
+    }
+}
+/*
+
+       <NavigationContainer>
+            {user===null ?(
                 <Stack.Navigator
                     initialRouteName="Auth"
                     screenOptions={{gestureEnabled: false}}
@@ -31,9 +63,9 @@ export default function AuthStack() {
                         options={{title: 'Sign Up'}}
                     />
                     <Stack.Screen
-                        name="Home"
-                        component={Home}
-                        options={{title: 'Home'}}
+                        name="Trade"
+                        component={Trade}
+                        options={{title: 'Trade'}}
                     />
 
                 </Stack.Navigator>
@@ -41,8 +73,5 @@ export default function AuthStack() {
             ) : (
                 <Navigationbar />
             )}
-
-
         </NavigationContainer>
-    );
-}
+ */

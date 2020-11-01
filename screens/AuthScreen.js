@@ -15,6 +15,7 @@ import {useNavigation} from "@react-navigation/native";
 import Auth from "./action/Auth";
 import Login from './action/Login'
 import * as firebase from "firebase";
+import AuthStack from "../routes/RootNavigation";
 
 const AuthScreen = () => {
     const navigation = useNavigation();
@@ -25,34 +26,33 @@ const AuthScreen = () => {
     const [isSignUp,setIsSignUp]=React.useState(false);
 
     const authHandler = () => {
-        if(isSignUp){
-           signupHandler();
-        }
-        else{
+        if(isSignUp) {
+            signupHandler();
+
+        }else{
             signinHandler();
         }
-        async function   signupHandler() {
-            const response = await auth(email, pwd)
-            if (response.status != 200) {
-                throw new Error('Something went wrong in the auth screen!');
-            }
-            else{
-                navigation.navigate('Trade');
-            }
 
-        }
-        async function   signinHandler() {
-            alert("login page");
-            const response = await login(email, pwd)
-            if (response.status != 200) {
-                throw new Error('Something went wrong in the login screen!');
-            }
-            else{
-                navigation.navigate('Trade');
-            }
-
-        }
     };
+    /*inscription - Redirection vers Trade */
+    async function   signupHandler() {
+        const response = await auth(email, pwd)
+        if (response.status !== 200) {
+            throw new Error('Something went wrong in the auth screen!');
+        }
+    }
+    /*connexion -  Redirection vers App (Trade)*/
+    async function   signinHandler() {
+        const response = await login(email, pwd)
+        if (response.status !== 200) {
+
+
+            throw new Error('Something went wrong in the login screen!');
+        }
+        else{
+            alert(response.email);
+        }
+    }
     return <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={50}
