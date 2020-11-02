@@ -164,8 +164,6 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
     return (
-        <NavigationContainer  >
-
             <Tab.Navigator initialRouteName="Create"
                            tabBarOptions={{
                                activeTintColor: '#e91e63',
@@ -206,8 +204,6 @@ export default function App() {
                             }}
                 />
             </Tab.Navigator>
-
-        </NavigationContainer>
     )
 }
 
