@@ -16,95 +16,68 @@ import Auth from "./action/Auth";
 import Login from './action/Login'
 import * as firebase from "firebase";
 import AuthStack from "../routes/RootNavigation";
-import  Navigationbar from "../component/Navigationbar";
-import Test from "./Test";
-import {AuthContext} from '../component/Context';
-export default function AuthScreen() {
+import { AuthContext } from '../component/Context';
+
+const AuthScreen = () => {
     const navigation = useNavigation();
     const auth = Auth();
     const login = Login();
-    const [email, setEmail] = React.useState('');
-    const [pwd, setPwd] = React.useState('');
-    const [isSignUp, setIsSignUp] = React.useState(false);
+    const [email,setEmail]=React.useState('');
+    const [pwd,setPwd]=React.useState('');
+    const [user,setUser]=React.useState('');
+    const [isSignUp,setIsSignUp]=React.useState(false);
     const {signIn} = React.useContext(AuthContext)
+    const {signUp} = React.useContext(AuthContext)
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const value = firebase.auth().currentUser;
 
     const authHandler = () => {
-        if (isSignUp) {
-            signupHandler();
 
-        } else {
-            signIn();
+        
+        if(isSignUp) {
+            alert("signup = "  +email + " || " + pwd)
+            signUp(email,pwd); /*inscription*/
 
+        }else{
+            alert("signin = "  +email + "    " + pwd)
+
+            signIn(email,pwd);  /*connexion*/
         }
 
     };
 
 
     /*inscription - Redirection vers Trade */
-    async function signupHandler() {
-
-    
-    }
-    /*connexion -  Redirection vers App (Trade)*/
-
-    const signinHandler = async () => {
-
-        alert(" in to login ")
-      /* 
-        alert(" in to login ")
-        global.goSingin = false;
-        alert(" global  = " +global.goSingin )
-
-        */
-   
-        const response = await login(email, pwd);
-        alert("response  value = " + response.status)
+    async function   signupHandler() {
+        const response = await auth(email, pwd)
         if (response.status !== 200) {
-            alert(" IN TO IF")
-            throw new Error('Something went wrong in the login screen!');
-        }
-        else {
-            alert(" IN TO ELSE  " +  value)
-            
+            throw new Error('Something went wrong in the auth screen!');
         }
         
-    };
-    async function signinHandlerss() {
-        alert("asyn funtion");
+        else{
 
-
-        const response = await login(email, pwd)
-        if (response.status !== 200) {
-
-
-            throw new Error('Something went wrong in the login screen!');
-        }
-        else {
-            if (value === null) {
-
-                alert(" EQUALS NULL ")
-            } else {
-
-                alert(" EQUALS VALUE ")
-
-
-            }
+           
         }
 
     }
+ 
     return <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={50}
         style={styles.screen}
     >
-        <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
+       <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
             <CardLogin style={styles.authContainer}>
                 <ScrollView>
+                {isSignUp ? (<Text style={styles.text}>User</Text>) : (null)}
+                
+                    {isSignUp ? (<TextInput style={styles.textinput}
+                        id="user"
+                        label="User"
+                        required
+                        autoCapitalize="none"
+                        onChangeText={text => setUser(text)}
+                        initialValue=""
+                    />) : (null)}
                     <Text style={styles.text}>E-Mail</Text>
                     <TextInput style={styles.textinput}
                         id="email"
@@ -113,7 +86,6 @@ export default function AuthScreen() {
                         required
                         email
                         autoCapitalize="none"
-                        errorText="Please enter a valid email address."
                         onChangeText={text => setEmail(text)}
                         initialValue=""
                     />
@@ -126,7 +98,6 @@ export default function AuthScreen() {
                         required
                         minLength={5}
                         autoCapitalize="none"
-                        errorText="Please enter a valid password."
                         onChangeText={text => setPwd(text)}
                         initialValue=""
                     />
@@ -173,3 +144,4 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
     }
 });
+export default AuthScreen;

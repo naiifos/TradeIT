@@ -14,67 +14,41 @@ import Test from "../screens/Test";
 
 export default function AuthStack() {
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    //const user=firebase.auth().currentUser;
-    const user = firebase.auth().currentUser;
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
     const Stack = createStackNavigator();
 
-    return (
-        <NavigationContainer>
-
-            <Stack.Navigator
-                initialRouteName="Auth"
-                screenOptions={{ gestureEnabled: false }}
-            >
-                {user === null ? (
+const Stack = createStackNavigator();
+export default function () {
+    firebase.auth().onAuthStateChanged(function(user) {
+        return <NavigationContainer>
+            {user===null ?(
+                <Stack.Navigator
+                    initialRouteName="Auth"
+                    screenOptions={{gestureEnabled: false}}
+                >
                     <Stack.Screen
                         name="Auth"
                         component={AuthScreen}
-                        options={{
-                            title: 'Authenticate',
-                            headerStyle:
-                            {
-                                backgroundColor: '#f7287b',
-                            },
-
-                            headerTitleStyle:
-                            {
-                                color: 'white',
-                                fontWeight: 'bold',
-                                marginTop: -10,
-                                fontSize: 20,
-
-                            },
-                            headerTintColor: '#fff',
-
-                            headerTransparent: true,
-
-                        }}
+                        options={{title: 'Sign Up'}}
+                    />
+                    <Stack.Screen
+                        name="Trade"
+                        component={Trade}
+                        options={{title: 'Trade'}}
                     />
 
+                </Stack.Navigator>
 
-                ) : (
+            ) : (
+                <Navigationbar />
+            )}
+        </NavigationContainer>;
 
-                        <Stack.Screen
-                            name="Auth"
-                            component={Test}
-                            options={{
-                                title: 'Test',
-
-
-                            }}
-                        />
-
-                    )}
-
-
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-
+    });
+}
 }
 /*
 
