@@ -15,16 +15,13 @@ import Trade from "../screens/Trade";
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-//const user=firebase.auth().currentUser;
-const user = firebase.auth().currentUser;
 
 
 const Stack = createStackNavigator();
-export default function AuthStack() {
-    if (user === null) {
-        return (
-            <NavigationContainer>
-
+export default function () {
+    firebase.auth().onAuthStateChanged(function(user) {
+        return <NavigationContainer>
+            {user===null ?(
                 <Stack.Navigator
                     initialRouteName="Auth"
                     screenOptions={{gestureEnabled: false}}
@@ -32,22 +29,22 @@ export default function AuthStack() {
                     <Stack.Screen
                         name="Auth"
                         component={AuthScreen}
-                        options={{title: 'Authenticate'}}
+                        options={{title: 'Sign Up'}}
+                    />
+                    <Stack.Screen
+                        name="Trade"
+                        component={Trade}
+                        options={{title: 'Trade'}}
                     />
 
-
                 </Stack.Navigator>
-            </NavigationContainer>
-        );
-    } else {
-        alert(" value of user  = " + user)
-        alert("into false condition ")
 
-        return (
-                <Navigationbar/>
+            ) : (
+                <Navigationbar />
+            )}
+        </NavigationContainer>;
 
-        );
-    }
+    });
 }
 /*
 
