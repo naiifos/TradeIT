@@ -1,53 +1,80 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import createSwitchNavigator from 'react-navigation-animated-switch';
-import {Transition} from 'react-native-reanimated';
+import { Transition } from 'react-native-reanimated';
 import AuthScreen from '../screens/AuthScreen';
 import Home from '../screens/Home';
-import React from "react";
-import {NavigationContainer} from "@react-navigation/native";
+import React, { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import * as firebase from "firebase";
-import {Image, Text, View} from "react-native";
+import { Image, Text, View } from "react-native";
 import Navigationbar from "../component/Navigationbar";
-import {firebaseConfig} from "../config";
+import { firebaseConfig } from "../config";
 import Trade from "../screens/Trade";
+import Test from "../screens/Test";
 
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-//const user=firebase.auth().currentUser;
-const user = firebase.auth().currentUser;
-
-
-const Stack = createStackNavigator();
 export default function AuthStack() {
-    if (user === null) {
-        return (
-            <NavigationContainer>
 
-                <Stack.Navigator
-                    initialRouteName="Auth"
-                    screenOptions={{gestureEnabled: false}}
-                >
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    //const user=firebase.auth().currentUser;
+    const user = firebase.auth().currentUser;
+
+    const Stack = createStackNavigator();
+
+    return (
+        <NavigationContainer>
+
+            <Stack.Navigator
+                initialRouteName="Auth"
+                screenOptions={{ gestureEnabled: false }}
+            >
+                {user === null ? (
                     <Stack.Screen
                         name="Auth"
                         component={AuthScreen}
-                        options={{title: 'Authenticate'}}
+                        options={{
+                            title: 'Authenticate',
+                            headerStyle:
+                            {
+                                backgroundColor: '#f7287b',
+                            },
+
+                            headerTitleStyle:
+                            {
+                                color: 'white',
+                                fontWeight: 'bold',
+                                marginTop: -10,
+                                fontSize: 20,
+
+                            },
+                            headerTintColor: '#fff',
+
+                            headerTransparent: true,
+
+                        }}
                     />
 
 
-                </Stack.Navigator>
-            </NavigationContainer>
-        );
-    } else {
-        alert(" value of user  = " + user)
-        alert("into false condition ")
+                ) : (
 
-        return (
-                <Navigationbar/>
+                        <Stack.Screen
+                            name="Auth"
+                            component={Test}
+                            options={{
+                                title: 'Test',
 
-        );
-    }
+
+                            }}
+                        />
+
+                    )}
+
+
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+
 }
 /*
 

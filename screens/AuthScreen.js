@@ -1,4 +1,4 @@
-import React, {useReducer, useCallback, useState} from 'react';
+import React, { useReducer, useCallback, useState } from 'react';
 import {
     ScrollView,
     View,
@@ -7,58 +7,102 @@ import {
     Button,
     TextInput
 } from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import CardLogin from '../user/CardLogin';
 import * as authActions from './action/Auth';
 import Text from "react-native-paper/src/components/Typography/Text";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Auth from "./action/Auth";
 import Login from './action/Login'
 import * as firebase from "firebase";
 import AuthStack from "../routes/RootNavigation";
-
-const AuthScreen = () => {
+import  Navigationbar from "../component/Navigationbar";
+import Test from "./Test";
+import {AuthContext} from '../component/Context';
+export default function AuthScreen() {
     const navigation = useNavigation();
     const auth = Auth();
     const login = Login();
-    const [email,setEmail]=React.useState('');
-    const [pwd,setPwd]=React.useState('');
-    const [isSignUp,setIsSignUp]=React.useState(false);
+    const [email, setEmail] = React.useState('');
+    const [pwd, setPwd] = React.useState('');
+    const [isSignUp, setIsSignUp] = React.useState(false);
+    const {signIn} = React.useContext(AuthContext)
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const value = firebase.auth().currentUser;
 
     const authHandler = () => {
-        if(isSignUp) {
+        if (isSignUp) {
             signupHandler();
 
-        }else{
-            signinHandler();
+        } else {
+            signIn();
+
         }
 
     };
+
+
     /*inscription - Redirection vers Trade */
-    async function   signupHandler() {
-        const response = await auth(email, pwd)
-        if (response.status !== 200) {
-            throw new Error('Something went wrong in the auth screen!');
-        }
+    async function signupHandler() {
+
+    
     }
     /*connexion -  Redirection vers App (Trade)*/
-    async function   signinHandler() {
+
+    const signinHandler = async () => {
+
+        alert(" in to login ")
+      /* 
+        alert(" in to login ")
+        global.goSingin = false;
+        alert(" global  = " +global.goSingin )
+
+        */
+   
+        const response = await login(email, pwd);
+        alert("response  value = " + response.status)
+        if (response.status !== 200) {
+            alert(" IN TO IF")
+            throw new Error('Something went wrong in the login screen!');
+        }
+        else {
+            alert(" IN TO ELSE  " +  value)
+            
+        }
+        
+    };
+    async function signinHandlerss() {
+        alert("asyn funtion");
+
+
         const response = await login(email, pwd)
         if (response.status !== 200) {
 
 
             throw new Error('Something went wrong in the login screen!');
         }
-        else{
-            alert(response.email);
+        else {
+            if (value === null) {
+
+                alert(" EQUALS NULL ")
+            } else {
+
+                alert(" EQUALS VALUE ")
+
+
+            }
         }
+
     }
     return <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={50}
         style={styles.screen}
     >
-        <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+        <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
             <CardLogin style={styles.authContainer}>
                 <ScrollView>
                     <Text style={styles.text}>E-Mail</Text>
@@ -87,11 +131,11 @@ const AuthScreen = () => {
                         initialValue=""
                     />
                     <View style={styles.buttonContainer}>
-                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler}/>
+                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler} />
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button
-                            title={`Switch to ${isSignUp ? 'Login' : 'Sign Up'}` }
+                            title={`Switch to ${isSignUp ? 'Login' : 'Sign Up'}`}
                             color={"#808080"}
                             onPress={() => {
                                 setIsSignUp(isSignUp => !isSignUp);
@@ -122,11 +166,10 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 10
     },
-    text:{
+    text: {
         padding: 20,
     },
-    textinput:{
-        borderBottomWidth:2,
+    textinput: {
+        borderBottomWidth: 2,
     }
 });
-export default AuthScreen;

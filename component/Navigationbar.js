@@ -164,7 +164,7 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
     return (
-        <NavigationContainer  >
+        
 
             <Tab.Navigator initialRouteName="Create"
                            tabBarOptions={{
@@ -207,7 +207,7 @@ export default function App() {
                 />
             </Tab.Navigator>
 
-        </NavigationContainer>
+ 
     )
 }
 
