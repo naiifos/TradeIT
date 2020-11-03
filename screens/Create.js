@@ -17,6 +17,8 @@ import ImagePicker from '../component/ImagePicker';
 import Input from '../component/Input';
 import { render } from 'react-dom';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { AuthContext } from '../component/Context';
+
 const Create = () => {
 
     useEffect(() => {
@@ -38,10 +40,12 @@ const Create = () => {
         location: "",
         description: ""
     })
-
+    const {signOut} = React.useContext(AuthContext)
     const [pickState, setPickState] = useState();
     const getTradeData = () => {
 
+       // signOut();
+       /*
         if(form.title.length > 13)
         {
             alert( "Title must have less than 13 characters ")
@@ -49,6 +53,7 @@ const Create = () => {
             
              alert(form.title + " " + form.location + " " + form.description + "" + pickState);
         }
+        */
     }
     const Separator = () => (
         <View style={styles.separator} />
