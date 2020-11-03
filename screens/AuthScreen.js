@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useState } from 'react';
+import React, {useReducer, useCallback, useState} from 'react';
 import {
     ScrollView,
     View,
@@ -7,21 +7,17 @@ import {
     Button,
     TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import CardLogin from '../user/CardLogin';
-import * as authActions from './action/Auth';
 import Text from "react-native-paper/src/components/Typography/Text";
-import { useNavigation } from "@react-navigation/native";
-import Auth from "./action/Auth";
-import Login from './action/Login'
+import {useNavigation} from "@react-navigation/native";
 import * as firebase from "firebase";
 import AuthStack from "../routes/RootNavigation";
 import { AuthContext } from '../component/Context';
 
 const AuthScreen = () => {
     const navigation = useNavigation();
-    const auth = Auth();
-    const login = Login();
+
     const [email,setEmail]=React.useState('');
     const [pwd,setPwd]=React.useState('');
     const [user,setUser]=React.useState('');
@@ -34,31 +30,17 @@ const AuthScreen = () => {
 
         
         if(isSignUp) {
-            alert("signup = "  +email + " || " + pwd)
+          //  alert("signup = "  +email + " || " + pwd)
             signUp(email,pwd); /*inscription*/
 
         }else{
-            alert("signin = "  +email + "    " + pwd)
+          //  alert("signin = "  +email + "    " + pwd)
 
             signIn(email,pwd);  /*connexion*/
         }
 
     };
-
-
-    /*inscription - Redirection vers Trade */
-    async function   signupHandler() {
-        const response = await auth(email, pwd)
-        if (response.status !== 200) {
-            throw new Error('Something went wrong in the auth screen!');
-        }
-        
-        else{
-
-           
-        }
-
-    }
+    
  
     return <KeyboardAvoidingView
         behavior="padding"
@@ -102,11 +84,11 @@ const AuthScreen = () => {
                         initialValue=""
                     />
                     <View style={styles.buttonContainer}>
-                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler} />
+                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler}/>
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button
-                            title={`Switch to ${isSignUp ? 'Login' : 'Sign Up'}`}
+                            title={`Switch to ${isSignUp ? 'Login' : 'Sign Up'}` }
                             color={"#808080"}
                             onPress={() => {
                                 setIsSignUp(isSignUp => !isSignUp);
@@ -137,11 +119,11 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 10
     },
-    text: {
+    text:{
         padding: 20,
     },
-    textinput: {
-        borderBottomWidth: 2,
+    textinput:{
+        borderBottomWidth:2,
     }
 });
 export default AuthScreen;
