@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions, } from 'react-native';
+import MapView from 'react-native-maps';
 import {
     useTheme,
     Avatar,
@@ -13,46 +14,52 @@ import {
 } from 'react-native-paper';
 import {
     DrawerContentScrollView,
-    DrawerItem
+    DrawerItemList,
+    DrawerItem,
 } from '@react-navigation/drawer';
 import { AuthContext } from './Context';
 import YourLocalisation from '../screens/YourLocalisation'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { render } from 'react-dom';
 const DrawerContent = (props) => {
 
     const { signOut } = React.useContext(AuthContext)
-
+    
     return (
-        <View style={{ flex: 1 }}>
+        <View {...props} style={{ flex: 1 }}>
+            <DrawerContentScrollView {...props}>
+                <DrawerItemList {...props} />
+                <Drawer.Section style={styles.drawerSection} >
 
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <Icon
+                                name="home-outline"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Trade IT"
+                        onPress={() => { props.navigation.navigate('Trade') }}
+                    />
+                </Drawer.Section>
+                <Drawer.Section style={styles.drawerSection}>
 
-            <Drawer.Section style={styles.drawerSection}>
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <Icon
-                            name="home-outline"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Trade IT"
-                    onPress={() => { props.navigation.navigate('Trade') }}
-                />
-            </Drawer.Section>
-            <Drawer.Section style={styles.drawerSection}>
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <Icon
-                            name="map-marker"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Your Location"
-                //    onPress={() => { props.navigation.navigate('YourLocalisation') }}
-                />
-            </Drawer.Section>
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <Icon
+                                name="map-marker"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Your Location"
+                        onPress={() => { alert(" ur location should be shown")}}
+                    />
+                </Drawer.Section>
+            </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
+
                 <DrawerItem
                     icon={({ color, size }) => (
                         <Icon
@@ -73,6 +80,16 @@ export default DrawerContent
 
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    mapStyle: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
     drawerContent: {
         flex: 1,
     },
@@ -103,10 +120,10 @@ const styles = StyleSheet.create({
         marginRight: 3,
     },
     drawerSection: {
-        marginTop: 50,
+        marginTop: 5,
     },
     bottomDrawerSection: {
-        marginTop: 100,
+        marginTop: 15,
         borderTopColor: '#f4f4f4',
         borderTopWidth: 1
     },
