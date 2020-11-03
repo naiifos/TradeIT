@@ -33,7 +33,6 @@ export default function App() {
     } else {
       setUserToken(null)
 
-      alert(" State of user token has changed ")
     }
 
   })
