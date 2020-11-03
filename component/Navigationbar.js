@@ -1,14 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import RootNavigation from '../routes/RootNavigation';
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AuthScreen from '../screens/AuthScreen';
 import Trade from '../screens/Trade';
 import Create from '../screens/Create';
 import Profile from '../screens/Profile';
@@ -16,14 +11,18 @@ import Settings from '../screens/Settings';
 import TradeInfo from '../screens/TradeInfo';
 import ChatBox from '../screens/ChatBox';
 import Chat from '../screens/Chat';
-import DrawerContent from '../component/DrawerContent';
 import YourLocalisation from '../screens/YourLocalisation';
-import { createSwitchNavigator } from "react-navigation";
 import { AuthContext } from '../component/Context';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerItem,
+} from '@react-navigation/drawer';
 
 
-
-
+const size = 20;
+const color = "#f7287b";
 const CreateStack = createStackNavigator();
 function CreateStackScreen() {
     return (
@@ -217,16 +216,63 @@ function AppScreen() {
 
     )
 }
+
+function logout() {
+    signOut();
+
+    useEffect(() => {
+        navigation.navigate('Auth')
+    });
+
+}
+
+function CustomDrawerContent(props) {
+    
+    const { signOut } = React.useContext(AuthContext)
+    return (
+        <DrawerContentScrollView {...props}>
+            <DrawerItemList {...props} />
+            <DrawerItem icon={() => (
+                <Icon
+                    name="exit-to-app"
+                    color={color}
+                    size={size}
+                />
+            )}
+                label="Sign Out"
+                onPress={() => { signOut() }} />
+        </DrawerContentScrollView>
+    );
+}
 export default function App() {
 
-    const {signOut} = React.useContext(AuthContext)
+  
 
     return (
-        <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <CustomDrawerContent {...props} />} >
             <Drawer.Screen name="Trade IT" component={AppScreen} />
-            <Drawer.Screen name="Chat" component={Chat} />
-            <Drawer.Screen name="Your Localisation" component={YourLocalisation} />
-        
+            <Drawer.Screen name="Chat" component={Chat}
+                options={{
+
+                    drawerIcon: (({ focused }) => <Icon
+                        name="message"
+                        color={color}
+                        size={size}
+                    />)
+
+                }}
+            />
+            <Drawer.Screen name="Your Location" component={YourLocalisation}
+                options={{
+
+                    drawerIcon: (({ focused }) => <Icon
+                        name="map-marker"
+                        color={color}
+                        size={size}
+                    />)
+
+                }} />
+
         </Drawer.Navigator>
     )
 
