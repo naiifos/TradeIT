@@ -80,7 +80,7 @@ export default function TradeInfo({ route }) {
                     <View style={styles.titleContainer}>
                         <Text style={styles.imageTitle}>{title}</Text>
                     </View>
-                )} yy
+                )} 
                 renderFixedForeground={() => (
                     <Animatable.View style={styles.navTitleView} ref={navTitleView}>
                         <Text style={styles.navTitle}></Text>

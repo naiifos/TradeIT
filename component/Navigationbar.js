@@ -7,7 +7,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import AuthScreen from '../screens/AuthScreen';
 import Trade from '../screens/Trade';
 import Create from '../screens/Create';
@@ -15,9 +15,13 @@ import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 import TradeInfo from '../screens/TradeInfo';
 import ChatBox from '../screens/ChatBox';
-import {createSwitchNavigator} from "react-navigation";
+import Chat from '../screens/Chat';
+import DrawerContent from '../component/DrawerContent';
+import YourLocalisation from '../screens/YourLocalisation';
+import { createSwitchNavigator } from "react-navigation";
+import { AuthContext } from '../component/Context';
 
-//const AuthStack = createSwitchNavigator({Auth:AuthScreen,Trade:Trade });
+
 
 
 const CreateStack = createStackNavigator();
@@ -49,62 +53,62 @@ function TradeStackScreen() {
 
         <TradeStack.Navigator initialRouteName="Trade">
             <TradeStack.Screen name="Trade" component={Trade}
-                               options={{
-                                   headerStyle: {
-                                       backgroundColor: '#f7287b',
-                                   },
+                options={{
+                    headerStyle: {
+                        backgroundColor: '#f7287b',
+                    },
 
-                                   headerTitleStyle: {
-                                       position: 'absolute',
-                                       color: 'white',
-                                       left: -170,
-                                       top: -10,
-                                       fontSize: 25
+                    headerTitleStyle: {
+                        position: 'absolute',
+                        color: 'white',
+                        left: -170,
+                        top: -10,
+                        fontSize: 25
 
-                                   },
-                               }} />
+                    },
+                }} />
             <TradeStack.Screen name="TradeInfo" component={TradeInfo}
-                               options={{
-                                   title: 'Trade Info',
-                                   headerStyle:
-                                       {
-                                           backgroundColor: '#f7287b',
-                                       },
+                options={{
+                    title: 'Trade Info',
+                    headerStyle:
+                    {
+                        backgroundColor: '#f7287b',
+                    },
 
-                                   headerTitleStyle:
-                                       {
-                                           color: 'white',
-                                           fontWeight: 'bold',
-                                           marginTop: 4,
-                                           fontSize: 20,
+                    headerTitleStyle:
+                    {
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginTop: 4,
+                        fontSize: 20,
 
-                                       },
-                                   headerTintColor: '#fff',
-                                   headerTitle: false,
-                                   headerTransparent: true,
+                    },
+                    headerTintColor: '#fff',
+                    headerTitle: false,
+                    headerTransparent: true,
 
-                               }}
+                }}
             />
             <TradeStack.Screen name="ChatBox" component={ChatBox}
-                               options={{
-                                   title: 'Chat Box',
-                                   headerStyle:
-                                       {
-                                           backgroundColor: '#f7287b',
-                                       },
+                options={{
+                    title: 'Chat Box',
+                    headerStyle:
+                    {
+                        backgroundColor: '#f7287b',
+                    },
 
-                                   headerTitleStyle:
-                                       {
-                                           color: 'white',
-                                           fontWeight: 'bold',
-                                           marginTop: 4,
-                                           fontSize: 20,
+                    headerTitleStyle:
+                    {
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginTop: 4,
+                        fontSize: 20,
 
-                                       },
-                                   headerTintColor: '#fff',
+                    },
+                    headerTintColor: '#fff',
 
 
-                               }}
+                }}
             />
 
         </TradeStack.Navigator>
@@ -119,19 +123,19 @@ function ProfileStackScreen() {
     return (
         <ProfileStack.Navigator>
             <ProfileStack.Screen name="Profile" component={Profile}
-                                 options={{
-                                     headerStyle: {
-                                         backgroundColor: '#f7287b',
-                                     },
-                                     headerTitleStyle: {
-                                         position: 'absolute',
-                                         color: 'white',
-                                         left: -170,
-                                         top: -10,
-                                         fontSize: 25
+                options={{
+                    headerStyle: {
+                        backgroundColor: '#f7287b',
+                    },
+                    headerTitleStyle: {
+                        position: 'absolute',
+                        color: 'white',
+                        left: -170,
+                        top: -10,
+                        fontSize: 25
 
-                                     },
-                                 }} />
+                    },
+                }} />
         </ProfileStack.Navigator>
     );
 }
@@ -161,50 +165,71 @@ function SettingsStackScreen() {
 }
 
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-export default function App() {
+
+function AppScreen() {
+
+
     return (
-            <Tab.Navigator initialRouteName="Create"
-                           tabBarOptions={{
-                               activeTintColor: '#e91e63',
-                           }}>
+        <Tab.Navigator initialRouteName="Profile"
+            tabBarOptions={{
+                activeTintColor: '#e91e63',
+            }}>
+            <Tab.Screen name="Create" component={CreateStackScreen}
+                options={{
+
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="rocket" color={color} size={26} />
+                    ),
+                }}
+            />
+            <Tab.Screen name="Trade" component={TradeStackScreen}
+                options={{
+                    tabBarLabel: 'Trade',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={26} />
+                    ),
+                }}
+            />
+
+            <Tab.Screen name="Profile" component={ProfileStackScreen}
+                options={{
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={26} />
+                    ),
+                }}
+            />
+            <Tab.Screen name="Settings" component={SettingsStackScreen}
+                options={{
+                    tabBarLabel: 'Settings',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="settings" color={color} size={26} />
+                    ),
+                }}
+            />
 
 
-                <Tab.Screen name="Create" component={CreateStackScreen}
-                            options={{
 
-                                tabBarIcon: ({ color }) => (
-                                    <MaterialCommunityIcons name="rocket" color={color} size={26} />
-                                ),
-                            }}
-                />
-                <Tab.Screen name="Trade" component={TradeStackScreen}
-                            options={{
-                                tabBarLabel: 'Trade',
-                                tabBarIcon: ({ color }) => (
-                                    <MaterialCommunityIcons name="home" color={color} size={26} />
-                                ),
-                            }}
-                />
+        </Tab.Navigator>
 
-                <Tab.Screen name="Profile" component={ProfileStackScreen}
-                            options={{
-                                tabBarLabel: 'Profile',
-                                tabBarIcon: ({ color }) => (
-                                    <MaterialCommunityIcons name="account" color={color} size={26} />
-                                ),
-                            }}
-                />
-                <Tab.Screen name="Settings" component={SettingsStackScreen}
-                            options={{
-                                tabBarLabel: 'Settings',
-                                tabBarIcon: ({ color }) => (
-                                    <MaterialCommunityIcons name="settings" color={color} size={26} />
-                                ),
-                            }}
-                />
-            </Tab.Navigator>
+
     )
+}
+export default function App() {
+
+    const {signOut} = React.useContext(AuthContext)
+
+    return (
+        <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Screen name="Trade IT" component={AppScreen} />
+            <Drawer.Screen name="Chat" component={Chat} />
+            <Drawer.Screen name="Your Localisation" component={YourLocalisation} />
+        
+        </Drawer.Navigator>
+    )
+
 }
 
 const styles = StyleSheet.create({
