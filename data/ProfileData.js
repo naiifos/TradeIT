@@ -29,6 +29,11 @@ export default [
         imageUri: require('../assets/favicon.png'),
         heading: 'From Sweden',
         description:
+            'The “Plattan” in Plattan headphones is Swedish for “the slab.”' +
+            'The “Plattan” in Plattan headphones is Swedish for “the slab.”' +
+            'The “Plattan” in Plattan headphones is Swedish for “the slab.”' +
+            'The “Plattan” in Plattan headphones is Swedish for “the slab.”' +
+            'The “Plattan” in Plattan headphones is Swedish for “the slab.”' +
             'The “Plattan” in Plattan headphones is Swedish for “the slab.”',
         key: 'fourth',
         color: '#a1e3a1',

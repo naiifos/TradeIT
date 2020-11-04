@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
         height,
         alignItems: 'center',
         justifyContent: 'center',
+        bottom:45,
     },
     imageStyle: {
         width: width * 0.75,
@@ -224,6 +225,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         alignSelf: 'flex-end',
         flex: 0.5,
+        bottom:60,
     },
     heading: {
         color: '#444',
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
     },
     tickerContainer: {
         position: 'absolute',
-        top: 40,
+        top: 10,
         left: 20,
         overflow: 'hidden',
         height: TICKER_HEIGHT,
@@ -305,6 +307,6 @@ const styles = StyleSheet.create({
         height: CIRCLE_SIZE,
         borderRadius: CIRCLE_SIZE / 2,
         position: 'absolute',
-        top: '15%',
+        top: '10%',
     },
 });
