@@ -20,7 +20,7 @@ export default function App() {
   const authContext = React.useMemo(() => ({
 
     signIn: (email, pwd) => { signinHandler(email, pwd); },
-    signOut: () => { if (userToken !== null) { firebase.auth().signOut(); alert(" deconnexion  de " + userToken.email) ;setUserToken(null)} else { alert(" pas de deconnexion") } },
+    signOut: () => { if (userToken !== null) { firebase.auth().signOut(); alert(" deconnexion  de " + userToken.email); setUserToken(null) } else { alert(" pas de deconnexion") } },
     signUp: (email, pwd) => { signupHandler(email, pwd); },
 
   }));
@@ -29,12 +29,11 @@ export default function App() {
     if (user) {
 
       const indexOfArobas = firebase.auth().currentUser.email.indexOf('@');
-      firebase.auth().currentUser.name = firebase.auth().currentUser.email.substring(0,indexOfArobas)
+      firebase.auth().currentUser.name = firebase.auth().currentUser.email.substring(0, indexOfArobas)
       setUserToken(firebase.auth().currentUser)
       UserDataManagement.setUserData(userToken)
 
 
-   //   alert(" value of data singleton = " + UserDataManagement.getUserData())
     } else {
       setUserToken(null)
 
@@ -49,8 +48,8 @@ export default function App() {
 
     firebase.auth().createUserWithEmailAndPassword(email, pwd).catch(function (error) {
       // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      const errorCode = error.code;
+      const errorMessage = error.message;
       alert(errorCode + " - " + errorMessage)
       // ...
     });
@@ -67,8 +66,8 @@ export default function App() {
 
     firebase.auth().signInWithEmailAndPassword(email, pwd).catch(function (error) {
       // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      const errorCode = error.code;
+      const errorMessage = error.message;
 
       alert(errorCode + " - " + errorMessage)
       // ...
