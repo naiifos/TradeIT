@@ -7,15 +7,18 @@ import Navigationbar from "./component/Navigationbar";
 import { firebaseConfig } from "./config";
 import { AuthContext } from './component/Context';
 import UserDataManagement from './singleton/UserDataManagement';
+
 export default function App() {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
 
   
-
   const [userToken, setUserToken] = useState(null);
   const Stack = createStackNavigator();
+  const beforeAt= (email) => {
+    
+  }
   const authContext = React.useMemo(() => ({
 
     signIn: (email, pwd) => { signinHandler(email, pwd); },
@@ -27,8 +30,12 @@ export default function App() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
 
+      const indexOfArobas = firebase.auth().currentUser.email.indexOf('@');
+      firebase.auth().currentUser.name = firebase.auth().currentUser.email.substring(0,indexOfArobas)   
       setUserToken(firebase.auth().currentUser)
       UserDataManagement.setUserData(userToken)
+     
+     
    //   alert(" value of data singleton = " + UserDataManagement.getUserData())
     } else {
       setUserToken(null)
