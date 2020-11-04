@@ -20,7 +20,6 @@ const AuthScreen = () => {
 
     const [email,setEmail]=React.useState('');
     const [pwd,setPwd]=React.useState('');
-    const [user,setUser]=React.useState('');
     const [isSignUp,setIsSignUp]=React.useState(false);
     const {signIn} = React.useContext(AuthContext)
     const {signUp} = React.useContext(AuthContext)
@@ -50,16 +49,7 @@ const AuthScreen = () => {
        <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
             <CardLogin style={styles.authContainer}>
                 <ScrollView>
-                {isSignUp ? (<Text style={styles.text}>User</Text>) : (null)}
                 
-                    {isSignUp ? (<TextInput style={styles.textinput}
-                        id="user"
-                        label="User"
-                        required
-                        autoCapitalize="none"
-                        onChangeText={text => setUser(text)}
-                        initialValue=""
-                    />) : (null)}
                     <Text style={styles.text}>E-Mail</Text>
                     <TextInput style={styles.textinput}
                         id="email"

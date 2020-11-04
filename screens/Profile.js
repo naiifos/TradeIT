@@ -10,12 +10,13 @@ export default function Profile() {
         firebase.initializeApp(firebaseConfig);
     }
    
-
+/* 
     const [userToken, setUserToken] = useState(firebase.auth().currentUser);
+ */
     return (
         <View>
             <Text>
-                Welcome to Trade It {userToken.email}
+                Welcome to Trade It {UserDataManagement.getUserData().name}
             </Text>
         </View>
     );
