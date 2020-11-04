@@ -13,12 +13,10 @@ export default function App() {
     firebase.initializeApp(firebaseConfig);
   }
 
-  
+
   const [userToken, setUserToken] = useState(null);
   const Stack = createStackNavigator();
-  const beforeAt= (email) => {
-    
-  }
+
   const authContext = React.useMemo(() => ({
 
     signIn: (email, pwd) => { signinHandler(email, pwd); },
@@ -31,11 +29,11 @@ export default function App() {
     if (user) {
 
       const indexOfArobas = firebase.auth().currentUser.email.indexOf('@');
-      firebase.auth().currentUser.name = firebase.auth().currentUser.email.substring(0,indexOfArobas)   
+      firebase.auth().currentUser.name = firebase.auth().currentUser.email.substring(0,indexOfArobas)
       setUserToken(firebase.auth().currentUser)
       UserDataManagement.setUserData(userToken)
-     
-     
+
+
    //   alert(" value of data singleton = " + UserDataManagement.getUserData())
     } else {
       setUserToken(null)
