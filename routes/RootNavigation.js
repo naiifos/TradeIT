@@ -1,21 +1,24 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import createSwitchNavigator from 'react-navigation-animated-switch';
-import {Transition} from 'react-native-reanimated';
+import { Transition } from 'react-native-reanimated';
 import AuthScreen from '../screens/AuthScreen';
 import Home from '../screens/Home';
-import React from "react";
-import {NavigationContainer} from "@react-navigation/native";
+import React, { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import * as firebase from "firebase";
-import {Image, Text, View} from "react-native";
+import { Image, Text, View } from "react-native";
 import Navigationbar from "../component/Navigationbar";
-import {firebaseConfig} from "../config";
+import { firebaseConfig } from "../config";
 import Trade from "../screens/Trade";
+import Test from "../screens/Test";
 
+export default function AuthStack() {
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
+    const Stack = createStackNavigator();
 
 const Stack = createStackNavigator();
 export default function () {
@@ -45,6 +48,7 @@ export default function () {
         </NavigationContainer>;
 
     });
+}
 }
 /*
 
