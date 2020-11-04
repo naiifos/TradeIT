@@ -1,3 +1,4 @@
+//ctrl+f et chercher bdd. tout les commentaires avec bdd c'est qu'il faut changer
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
@@ -11,11 +12,12 @@ import {
 import data from '../data/ProfileData';
 
 const { width, height } = Dimensions.get('window');
-const LOGO_WIDTH = 220;
-const LOGO_HEIGHT = 40;
+/*const LOGO_WIDTH = 220; ici c'est pour le logo qui vient en bas à gauche (je l'ai enlever d'ailleur)
+const LOGO_HEIGHT = 40;*/
 const DOT_SIZE = 40;
-const TICKER_HEIGHT = 40;
+const TICKER_HEIGHT = 15;
 const CIRCLE_SIZE = width * 0.6;
+const userName="Moundir";//bdd => mettre le pseudo de firebase
 
 const Circle = ({ scrollX }) => {
     return (
@@ -54,7 +56,7 @@ const Circle = ({ scrollX }) => {
 };
 
 const Ticker = ({ scrollX }) => {
-    const inputRange = [-width, 0, width];
+    /*const inputRange = [-width, 0, width];
     const translateY = scrollX.interpolate({
         inputRange,
         outputRange: [TICKER_HEIGHT, 0, -TICKER_HEIGHT],
@@ -65,13 +67,18 @@ const Ticker = ({ scrollX }) => {
                 {data.map(({ type }, index) => {
                     return (
                         <Text key={index} style={styles.tickerText}>
-                            {type}
+                            {userName}
                         </Text>
                     );
                 })}
             </Animated.View>
         </View>
-    );
+    );*/
+    return(
+        <View style={styles.tickerContainer}>
+            <Text style={styles.tickerText}>{userName}</Text>
+        </View>
+    )
 };
 
 const Item = ({ imageUri, heading, description, index, scrollX }) => {
@@ -194,10 +201,7 @@ export default function App() {
                 )}
                 scrollEventThrottle={16}
             />
-            <Image
-                style={styles.logo}
-                source={require('../assets/voiture_doccasion.jpg')}
-            />
+
             <Pagination scrollX={scrollX} />
             <Ticker scrollX={scrollX} />
         </View>
@@ -244,7 +248,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 16 * 1.5,
     },
-    logo: {
+    /*logo: {
         opacity: 0.9,
         height: LOGO_HEIGHT,
         width: LOGO_WIDTH,
@@ -259,7 +263,7 @@ const styles = StyleSheet.create({
             { translateX: LOGO_WIDTH / 2 },
             { translateY: LOGO_HEIGHT / 2 },
         ],
-    },
+    },*/
     pagination: {
         position: 'absolute',
         right: 20,
@@ -295,7 +299,7 @@ const styles = StyleSheet.create({
         fontSize: TICKER_HEIGHT,
         lineHeight: TICKER_HEIGHT,
         textTransform: 'uppercase',
-        fontWeight: '800',
+        fontWeight: '700',
     },
 
     circleContainer: {

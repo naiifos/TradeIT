@@ -1,3 +1,5 @@
+//cette page c'est pour recevoir les données de la bdd et ils vont etre utiliser par la page profile
+// (format json)
 export default [
     {
         type: 'Humlan P',
