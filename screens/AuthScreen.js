@@ -1,8 +1,7 @@
-import React, { useReducer, useCallback, useState } from 'react';
+import React, {  } from 'react';
 import {
     ScrollView,
     View,
-    KeyboardAvoidingView,
     StyleSheet,
     Button,
     TextInput
@@ -10,55 +9,27 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import CardLogin from '../user/CardLogin';
 import Text from "react-native-paper/src/components/Typography/Text";
-<<<<<<< HEAD
-import { useNavigation } from "@react-navigation/native";
-import Auth from "./action/Auth";
-import Login from './action/Login'
-=======
-import {useNavigation} from "@react-navigation/native";
->>>>>>> 9dcbca5bd9f634ece77202ffd52aac07de9f0a42
-import * as firebase from "firebase";
-import AuthStack from "../routes/RootNavigation";
 import { AuthContext } from '../component/Context';
 
 const AuthScreen = () => {
-    const navigation = useNavigation();
-
     const [email,setEmail]=React.useState('');
     const [pwd,setPwd]=React.useState('');
     const [isSignUp,setIsSignUp]=React.useState(false);
     const {signIn} = React.useContext(AuthContext)
     const {signUp} = React.useContext(AuthContext)
 
-
     const authHandler = () => {
 
 
         if(isSignUp) {
-          //  alert("signup = "  +email + " || " + pwd)
             signUp(email,pwd); /*inscription*/
 
         }else{
-          //  alert("signin = "  +email + "    " + pwd)
 
             signIn(email,pwd);  /*connexion*/
         }
 
     };
-
-    /*inscription - Redirection vers Trade */
-    async function   signupHandler() {
-        const response = await auth(email, pwd)
-        if (response.status !== 200) {
-            throw new Error('Something went wrong in the auth screen!');
-        }
-
-        else{
-
-
-        }
-
-    }
 
        <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
             <CardLogin style={styles.authContainer}>
@@ -102,8 +73,7 @@ const AuthScreen = () => {
                 </ScrollView>
             </CardLogin>
         </LinearGradient>
-    </KeyboardAvoidingView>
-};
+}
 
 const styles = StyleSheet.create({
     screen: {
