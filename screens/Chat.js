@@ -1,13 +1,17 @@
 import React from 'react'
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text ,StyleSheet,ScrollView} from 'react-native';
+import ChatBox from "./ChatBox";
 const Chat = () => {
     return (
-        <View>
-            <Text>
-                Here we will show all ur messages with other users
-            </Text>
-        </View>
+        <ScrollView>
+            <ChatBox/>
+        </ScrollView>
     )
 }
+const styles= StyleSheet.create(
+    {
+
+    }
+)
 
 export default Chat

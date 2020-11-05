@@ -99,7 +99,7 @@ const Ticker = ({ scrollX }) => {
         </View>
     )
 };
-
+//bdd => la const jusque en dessous c'est ici que tout se passe pour la bdd
 const Item = ({ imageUri, heading, description, index, scrollX }) => {
     const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
     const inputRangeOpacity = [
