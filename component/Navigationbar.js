@@ -227,7 +227,7 @@ function logout() {
 }
 
 function CustomDrawerContent(props) {
-    
+
     const { signOut } = React.useContext(AuthContext)
     return (
         <DrawerContentScrollView {...props}>
@@ -244,14 +244,28 @@ function CustomDrawerContent(props) {
         </DrawerContentScrollView>
     );
 }
+
+const ChatStackNavigator = createStackNavigator();
+function ChatNavigation() {
+
+    return (
+        <ChatStackNavigator.Navigator initialRouteName="Chat"  >
+
+            <ChatStackNavigator.Screen name="Chat" component={Chat} />
+            <ChatStackNavigator.Screen name="ChatBox" component={ChatBox} />
+
+        </ChatStackNavigator.Navigator>
+    );
+
+}
 export default function App() {
 
-  
+
 
     return (
         <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <CustomDrawerContent {...props} />} >
             <Drawer.Screen name="Trade IT" component={AppScreen} />
-            <Drawer.Screen name="Chat" component={Chat}
+            <Drawer.Screen name="Chat" component={ChatNavigation}
                 options={{
 
                     drawerIcon: (({ focused }) => <Icon
