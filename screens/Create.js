@@ -18,46 +18,67 @@ import Input from '../component/Input';
 import { render } from 'react-dom';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { AuthContext } from '../component/Context';
-
+import * as firebase from "firebase";
+import { firebaseConfig } from "../config";
+import 'firebase/firestore';
 const Create = () => {
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                let latitude = JSON.stringify(position.coords.latitude)
-                let longitude = JSON.stringify(position.coords.longitude)
-
-                // alert(latitude + " // " + longitude);
-                // Add request to DB  HERE - Push the latitude and longitude of the users position
-            },
-            (error) => console.log(JSON.stringify(error)),
-            { enableHighAccuracy: Platform.OS != 'android', maximumAge: 2000 }
-        );
-    });
-
+    const [userToken, setUserToken] = useState(" ");
     const [form, setForm] = useState({
         title: "",
         location: "",
         description: ""
     })
-    const {signOut} = React.useContext(AuthContext)
+    const { signOut } = React.useContext(AuthContext)
     const [pickState, setPickState] = useState();
     const getTradeData = () => {
 
-       // signOut();
-       /*
-        if(form.title.length > 13)
-        {
-            alert( "Title must have less than 13 characters ")
-        }else{
-            
-             alert(form.title + " " + form.location + " " + form.description + "" + pickState);
-        }
-        */
+        // signOut();
+        /*
+         if(form.title.length > 13)
+         {
+             alert( "Title must have less than 13 characters ")
+         }else{
+             
+              alert(form.title + " " + form.location + " " + form.description + "" + pickState);
+         }
+         */
     }
     const Separator = () => (
         <View style={styles.separator} />
     );
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+     
+              firebase.auth().currentUser.latitude = position.coords.latitude
+              firebase.auth().currentUser.longitude = position.coords.longitude
+  
+  
+               firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+                .set({
+                  DarkTheme: false,
+                  Latitude:  firebase.auth().currentUser.latitude,
+                  Longitude:  firebase.auth().currentUser.longitude,
+                  Name: firebase.auth().currentUser.name,
+                })
+                //ensure we catch any errors at this stage to advise us if something does go wrong
+                .catch(error => {
+                      console.log('Something went wrong with added user to firestore: ', error);
+                })
+  
+              // alert(latitude + " // " + longitude);
+              // Add request to DB  HERE - Push the latitude and longitude of the users position
+                setUserToken(  firebase.auth().currentUser)
+            },
+            (error) => console.log(JSON.stringify(error)),
+            { enableHighAccuracy: Platform.OS != 'android', maximumAge: 2000 }
+          );
+
+
+    }, [userToken]);
+    firebase.auth().currentUser.longitude = userToken.longitude;
+    firebase.auth().currentUser.latitude = userToken.latitude;
 
     return (
 
@@ -68,7 +89,6 @@ const Create = () => {
                 <Input text={"Location"} placeholder={"Introduce the location "} value={form.location} onChange={(text) => setForm({ ...form, location: text })} />
                 <Input text={"Description"} placeholder={"Introduce the description "} value={form.description} onChange={(text) => setForm({ ...form, description: text })} />
                 <Separator />
-
                 <DropDownPicker style={styles.dropDownList}
                     items={[
                         { label: 'New', value: 'item1' },

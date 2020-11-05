@@ -1,3 +1,22 @@
+<<<<<<< HEAD
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet } from 'react-native';
+import * as firebase from "firebase";
+import { firebaseConfig } from "../config";
+import UserDataManagement from '../singleton/UserDataManagement';
+
+export default function Profile() {
+
+
+   
+
+    return (
+        <View>
+            <Text>
+                Welcome to Trade It {firebase.auth().currentUser.email} {firebase.auth().currentUser.Name} 
+       
+             </Text>
+=======
 //ctrl+f et chercher bdd. tout les commentaires avec bdd c'est qu'il faut changer
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -204,6 +223,7 @@ export default function App() {
 
             <Pagination scrollX={scrollX} />
             <Ticker scrollX={scrollX} />
+>>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
         </View>
     );
 }
