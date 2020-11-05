@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { } from 'react';
-=======
 import React, {} from 'react';
->>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 import {
     ScrollView,
     View,
@@ -15,21 +11,12 @@ import CardLogin from '../user/CardLogin';
 import Text from "react-native-paper/src/components/Typography/Text";
 import {AuthContext} from '../component/Context';
 
-<<<<<<< HEAD
-export default function AuthScreen (){
-    const [email, setEmail] = React.useState('');
-    const [pwd, setPwd] = React.useState('');
-    const [isSignUp, setIsSignUp] = React.useState(false);
-    const { signIn } = React.useContext(AuthContext)
-    const { signUp } = React.useContext(AuthContext)
-=======
-const AuthScreen = () => {
+export default function Auth(){
     const [email, setEmail] = React.useState('');
     const [pwd, setPwd] = React.useState('');
     const [isSignUp, setIsSignUp] = React.useState(false);
     const {signIn} = React.useContext(AuthContext)
     const {signUp} = React.useContext(AuthContext)
->>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 
     const authHandler = () => {
 
@@ -86,12 +73,11 @@ const AuthScreen = () => {
                 </ScrollView>
             </CardLogin>
         </LinearGradient>
-<<<<<<< HEAD
-    );
-=======
     )
->>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 }
+
+
+
 
 const styles = StyleSheet.create({
     screen: {
