@@ -171,7 +171,7 @@ function AppScreen() {
 
 
     return (
-        <Tab.Navigator initialRouteName="Profile"
+        <Tab.Navigator initialRouteName="Create"
             tabBarOptions={{
                 activeTintColor: '#e91e63',
             }}>

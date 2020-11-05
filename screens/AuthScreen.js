@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import {
     ScrollView,
     View,
@@ -11,27 +11,27 @@ import CardLogin from '../user/CardLogin';
 import Text from "react-native-paper/src/components/Typography/Text";
 import { AuthContext } from '../component/Context';
 
-const AuthScreen = () => {
-    const [email,setEmail]=React.useState('');
-    const [pwd,setPwd]=React.useState('');
-    const [isSignUp,setIsSignUp]=React.useState(false);
-    const {signIn} = React.useContext(AuthContext)
-    const {signUp} = React.useContext(AuthContext)
+export default function AuthScreen (){
+    const [email, setEmail] = React.useState('');
+    const [pwd, setPwd] = React.useState('');
+    const [isSignUp, setIsSignUp] = React.useState(false);
+    const { signIn } = React.useContext(AuthContext)
+    const { signUp } = React.useContext(AuthContext)
 
     const authHandler = () => {
 
 
-        if(isSignUp) {
-            signUp(email,pwd); /*inscription*/
+        if (isSignUp) {
+            signUp(email, pwd); /*inscription*/
 
-        }else{
+        } else {
 
-            signIn(email,pwd);  /*connexion*/
+            signIn(email, pwd);  /*connexion*/
         }
 
     };
-
-       <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
+    return (
+        <LinearGradient colors={['#f7287b', '#5c2038']} style={styles.gradient}>
             <CardLogin style={styles.authContainer}>
                 <ScrollView>
 
@@ -73,6 +73,7 @@ const AuthScreen = () => {
                 </ScrollView>
             </CardLogin>
         </LinearGradient>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -100,4 +101,3 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
     }
 });
-export default AuthScreen;

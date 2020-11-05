@@ -5,7 +5,7 @@ const Test = ({word}) => {
     return (
         <View>
             <Text>
-                Hello we are in the test page  {word}
+                 Loading Data ...
             </Text>
         </View>
     )
