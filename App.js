@@ -36,24 +36,24 @@ export default function App() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
 
-      console.log(" Traitement ajout db de " +firebase.auth().currentUser.email)
+    //  console.log(" Traitement ajout db de " +firebase.auth().currentUser.email)
       firebase.auth().currentUser.name = returnNameFromEmail(firebase.auth().currentUser.email);
       firebase.auth().currentUser.longitude = 0;
       firebase.auth().currentUser.latitude = 0;
-      
+      console.log(" user name  " + firebase.auth().currentUser.name)
       firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
         .set({
           DarkTheme: false,
           Latitude: 1,
           Longitude: 0,
-          Name: firebase.auth().currentUser.Name,
+          Name: firebase.auth().currentUser.name,
         })
         //ensure we catch any errors at this stage to advise us if something does go wrong
         .catch(error => {
           console.log('Something went wrong with added user to firestore: ', error);
         })
   
-      console.log(" User "+firebase.auth().currentUser.email + " ajouté " )
+   //   console.log(" User "+firebase.auth().currentUser.email + " ajouté " )
       firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
         .get()
         .then(function (doc) {
@@ -62,7 +62,7 @@ export default function App() {
             firebase.auth().currentUser.name = doc.data().Name
             firebase.auth().currentUser.latitude = doc.data().Latitude
             firebase.auth().currentUser.longitude = doc.data().Longitude
-            console.log("Document data in async authState :", firebase.auth().currentUser.name + "  " + firebase.auth().currentUser.latitude + "  " + firebase.auth().currentUser.longitude);
+    //        console.log("Document data in async authState :", firebase.auth().currentUser.name + "  " + firebase.auth().currentUser.latitude + "  " + firebase.auth().currentUser.longitude);
 
             setUserToken(firebase.auth().currentUser)
 
@@ -79,7 +79,7 @@ export default function App() {
 
 
     } else {
-      console.log(" setting null user token ")
+  //    console.log(" setting null user token ")
       setUserToken(null)
 
     }
