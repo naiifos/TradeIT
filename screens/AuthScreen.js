@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { } from 'react';
+=======
+import React, {} from 'react';
+>>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 import {
     ScrollView,
     View,
@@ -6,17 +10,26 @@ import {
     Button,
     TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import CardLogin from '../user/CardLogin';
 import Text from "react-native-paper/src/components/Typography/Text";
-import { AuthContext } from '../component/Context';
+import {AuthContext} from '../component/Context';
 
+<<<<<<< HEAD
 export default function AuthScreen (){
     const [email, setEmail] = React.useState('');
     const [pwd, setPwd] = React.useState('');
     const [isSignUp, setIsSignUp] = React.useState(false);
     const { signIn } = React.useContext(AuthContext)
     const { signUp } = React.useContext(AuthContext)
+=======
+const AuthScreen = () => {
+    const [email, setEmail] = React.useState('');
+    const [pwd, setPwd] = React.useState('');
+    const [isSignUp, setIsSignUp] = React.useState(false);
+    const {signIn} = React.useContext(AuthContext)
+    const {signUp} = React.useContext(AuthContext)
+>>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 
     const authHandler = () => {
 
@@ -37,29 +50,29 @@ export default function AuthScreen (){
 
                     <Text style={styles.text}>E-Mail</Text>
                     <TextInput style={styles.textinput}
-                        id="email"
-                        label="E-Mail"
-                        keyboardType="email-address"
-                        required
-                        email
-                        autoCapitalize="none"
-                        onChangeText={text => setEmail(text)}
-                        initialValue=""
+                               id="email"
+                               label="E-Mail"
+                               keyboardType="email-address"
+                               required
+                               email
+                               autoCapitalize="none"
+                               onChangeText={text => setEmail(text)}
+                               initialValue=""
                     />
                     <Text style={styles.text}>Password</Text>
                     <TextInput style={styles.textinput}
-                        id="password"
-                        label="Password"
-                        keyboardType="default"
-                        secureTextEntry
-                        required
-                        minLength={5}
-                        autoCapitalize="none"
-                        onChangeText={text => setPwd(text)}
-                        initialValue=""
+                               id="password"
+                               label="Password"
+                               keyboardType="default"
+                               secureTextEntry
+                               required
+                               minLength={5}
+                               autoCapitalize="none"
+                               onChangeText={text => setPwd(text)}
+                               initialValue=""
                     />
                     <View style={styles.buttonContainer}>
-                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler} />
+                        <Button title={isSignUp ? 'Sign Up' : 'Login'} color={"#ff0000"} onPress={authHandler}/>
                     </View>
                     <View style={styles.buttonContainer}>
                         <Button
@@ -73,7 +86,11 @@ export default function AuthScreen (){
                 </ScrollView>
             </CardLogin>
         </LinearGradient>
+<<<<<<< HEAD
     );
+=======
+    )
+>>>>>>> 2f1450049579912db40456b1f9e9c1305bf32024
 }
 
 const styles = StyleSheet.create({
