@@ -13,14 +13,13 @@ import Input from '../component/Input';
 import * as firebase from "firebase";
 import 'firebase/firestore';
 import { useNavigation } from "@react-navigation/native";
-
 import { AuthContext } from '../component/Context';
 const Create = () => {
 
     const navigation = useNavigation()
     const [userToken, setUserToken] = useState(" ");
     const [selectedImage, setSelectedImage] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     const [form, setForm] = useState({
         title: "",
@@ -79,20 +78,16 @@ const Create = () => {
         }
 
     }
-    const getImage = async (imageName) => {
-        let imageRef = firebase.storage().ref('images/' + imageName);
-        const url = await imageRef.getDownloadURL();
-        setPickedImage(url);
 
-    }
     function pushData() {
 
+        setIsLoading(true)
         const imageName = getShorterName(JSON.stringify(selectedImage))
-
         uploadImageFirebaseStorage(selectedImage, imageName).then(() => {
             // alert("success");
             console.log(" SUCCESS UPLOAD IMAGE")
-
+            setIsLoading(false)
+            
         }).catch(error => {
             //  alert(error.name);
             console.log(error)
@@ -174,6 +169,13 @@ const Create = () => {
     firebase.auth().currentUser.longitude = userToken.longitude;
     firebase.auth().currentUser.latitude = userToken.latitude;
 
+    if (isLoading) {
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#f7287b" />
+          </View>
+        );
+      }
     return (
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
