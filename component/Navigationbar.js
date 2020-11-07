@@ -19,6 +19,7 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
+import LoadingScreen from '../screens/LoadingScreen';
 
 
 const size = 20;
@@ -51,6 +52,7 @@ function TradeStackScreen() {
     return (
 
         <TradeStack.Navigator initialRouteName="Trade">
+           
             <TradeStack.Screen name="Trade" component={Trade}
                 options={{
                     headerStyle: {
