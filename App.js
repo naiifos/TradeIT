@@ -20,8 +20,6 @@ export default function App() {
 
   }, []);
   const [userToken, setUserToken] = useState(null);
-
-
   const [latitude, setLatitude] = useState("initialized");
   const Stack = createStackNavigator();
   const authContext = React.useMemo(() => ({
@@ -40,7 +38,6 @@ export default function App() {
       firebase.auth().currentUser.name = returnNameFromEmail(firebase.auth().currentUser.email);
       firebase.auth().currentUser.longitude = 0;
       firebase.auth().currentUser.latitude = 0;
-      console.log(" user name  " + firebase.auth().currentUser.name)
       firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
         .set({
           DarkTheme: false,

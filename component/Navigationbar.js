@@ -19,6 +19,7 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
+import LoadingScreen from '../screens/LoadingScreen';
 
 
 const size = 20;
@@ -51,6 +52,7 @@ function TradeStackScreen() {
     return (
 
         <TradeStack.Navigator initialRouteName="Trade">
+           
             <TradeStack.Screen name="Trade" component={Trade}
                 options={{
                     headerStyle: {
@@ -227,7 +229,7 @@ function logout() {
 }
 
 function CustomDrawerContent(props) {
-    
+
     const { signOut } = React.useContext(AuthContext)
     return (
         <DrawerContentScrollView {...props}>
@@ -244,14 +246,29 @@ function CustomDrawerContent(props) {
         </DrawerContentScrollView>
     );
 }
+const ChatStackNavigator = createDrawerNavigator();
+function ChatNavigation() {
+
+    return (
+        <ChatStackNavigator.Navigator initialRouteName="Chat"  >
+
+            <ChatStackNavigator.Screen name="Chat" component={Chat} />
+            <ChatStackNavigator.Screen name="ChatBox" component={ChatBox} />
+
+        </ChatStackNavigator.Navigator>
+    );
+
+}
+
+
 export default function App() {
 
-  
+
 
     return (
         <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <CustomDrawerContent {...props} />} >
             <Drawer.Screen name="Trade IT" component={AppScreen} />
-            <Drawer.Screen name="Chat" component={Chat}
+            <Drawer.Screen name="Chat" component={ChatNavigation}
                 options={{
 
                     drawerIcon: (({ focused }) => <Icon

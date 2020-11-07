@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { View, Button, Image, Text, StyleSheet, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Button, Image, Text, StyleSheet, Alert, ShadowPropTypesIOS } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-
+import 'react-native-get-random-values'
+import { nanoid } from 'nanoid'
 
 const ImgPicker = props => {
     const [pickedImage, setPickedImage] = useState();
-  
+    const [imageName, setImageName] = useState();
+
     const verifyPermissions = async () => {
         const resultCameraRoll = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         const resultCamera = await Permissions.askAsync(Permissions.CAMERA);
@@ -28,22 +30,32 @@ const ImgPicker = props => {
         }
         const image = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [16, 9],
+            aspect: [4, 3],
             quality: 0.5
-          });
+        });
         setPickedImage(image.uri);
+        //    setImageName(getShorterName(JSON.stringify(pickedImage)))
+        console.log(" image uri = " + image.uri)
+        props.onImageTake(image.uri);
     };
+    function getShorterName(imageName) {
+
+        let position = imageName.indexOf("ImagePicker");
+        position += 12;
+        return imageName.substring(position, imageName.length)
+
+    }
 
     return (
         <View style={styles.imagePicker}>
             <View style={styles.imagePreview}>
-                {!pickedImage ?(
-                <Text>No image picked yet.</Text>
+                {!pickedImage ? (
+                    <Text>No image picked yet.</Text>
 
                 ) : (
-                <Image style={styles.image} source={{uri:pickedImage}} />
-                )}
-                    
+                        <Image style={styles.image} source={{ uri: pickedImage }} />
+                    )}
+
             </View>
             <Button
                 title="Take Image"
@@ -65,7 +77,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: '#ccc',
-      //  marginBottom:10,
+        //  marginBottom:10,
         borderWidth: 1
     },
     image: {

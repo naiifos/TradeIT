@@ -1,13 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { Text, TextInput, View, Image, FlatList, StyleSheet } from 'react-native'
-
+import { Text, TextInput, View, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
+import * as firebase from "firebase";
+import 'firebase/firestore';
 import Card from "../component/Card";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from '../component/Context';
 
 export default function Trade() {
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [bool, setBool] = useState(false);
+    var boolean = true;
+
+
+    useEffect(() => {
+        
+        setLoading(true)
+        console.log(" in to bool timer ")
+        console.log(" size of data table " + data.length)
+        setTimeout(
+            function () {
+
+                setLoading(false)
+            }, 5000);
+        console.log(" after timer ")
+
+    }, [data])
+    useEffect(() => {
+
+        console.log(" Trade page ---------- ")
+        const subscriber = firebase.firestore()
+            .collection('Post')
+            .onSnapshot(querySnapshot => {
+                const users = [];
+
+                querySnapshot.forEach(documentSnapshot => {
+                    users.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    });
+                });
+
+                setData(users);
+
+
+                //   console.log(" value of data retrieved from db == "+ data)
+            });
+        subscriber;
+
+    }, [])
+
+
     const iconTrade = {
         icon: require('../assets/voiture_doccasion.jpg')
     }
+
     const [tradesAdverts, setTrades] = useState([
         /* Pull the data from DB, get all the trades adverts and store them in to tradesAdverts hook*/
         { title: 'Ballon', state: 'Use', image: iconTrade.icon, location: 'Rue Claessens, 21', name: 'Sofian', description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ', id: '1' },
@@ -22,13 +69,11 @@ export default function Trade() {
 
     const tradePage = (item) => {
 
-        const jsonName = JSON.stringify(item.name)
-        const name_ = jsonName.match(/[a-zA-Z]+/g);
 
         navigation.navigate('TradeInfo', {
 
             title: item.title,
-            name: name_,
+            name: item.name,
             image: item.image,
             state: item.state,
             location: item.location,
@@ -57,7 +102,8 @@ export default function Trade() {
 
         if (searchTerm.toString().length === 0) {
             if (!isEmpty) {
-                setTampon(tradesAdverts);
+                console.log("avant d'effectuer la recherche voici la valeur de data " + data)
+                setTampon(data); /* il faut que data soit rempli a ce moment du code - ajouter un await un qlq chose du genre */
                 setIsEmpty(true)
             } else {
                 setTrades(tampon);
@@ -72,9 +118,14 @@ export default function Trade() {
 
     }, [searchTerm]);
 
+    if (loading) {
+        return <ActivityIndicator />
+    }
 
 
     return (
+
+
         <View >
             <View
                 style={{
@@ -95,15 +146,14 @@ export default function Trade() {
                 />
             </View>
             <FlatList
-                data={tradesAdverts}
-                keyExtractor={item => item.id}
+                data={data}
                 renderItem={({ item }) => (
                     <Card
-                        title={item.title}
-                        state={item.state}
-                        name={item.name}
-                        image={item.image}
-                        location={item.location}
+                        title={item.Title}
+                        state={item.Etat}
+                        name={item.Name}
+                        image={item.Image}
+                        location={item.Location}
                         onPress={() => tradePage(item)} /* faudra ajouter l'image a un moment*/
                     />
                 )}

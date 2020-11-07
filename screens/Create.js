@@ -1,79 +1,168 @@
-import React, { useState, useEffect, Compo } from 'react';
-import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from 'react';
 import {
     View,
-    Text,
     Button,
-    TouchableOpacity,
-    TextInput,
     Platform,
     StyleSheet,
-    Alert,
-    TouchableWithoutFeedback,
+    TouchableWithoutFeedback, ActivityIndicator,
 } from 'react-native';
 import { Keyboard } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from '../component/ImagePicker';
 import Input from '../component/Input';
-import { render } from 'react-dom';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { AuthContext } from '../component/Context';
 import * as firebase from "firebase";
-import { firebaseConfig } from "../config";
 import 'firebase/firestore';
+import { useNavigation } from "@react-navigation/native";
+
+import {AuthContext} from '../component/Context';
 const Create = () => {
 
+    const navigation = useNavigation()
     const [userToken, setUserToken] = useState(" ");
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
     const [form, setForm] = useState({
         title: "",
         location: "",
         description: ""
     })
-    const { signOut } = React.useContext(AuthContext)
-    const [pickState, setPickState] = useState();
+    const [pickState, setPickState] = useState("New");
+    const imageTakenHandle = imagePath => {
+        setSelectedImage(imagePath);
+
+    }
+
+    function getShorterName(imageName) {
+
+        let position = imageName.indexOf("ImagePicker");
+        position += 12;
+        return imageName.substring(position, imageName.length)
+
+    }
     const getTradeData = () => {
 
-        // signOut();
-        /*
-         if(form.title.length > 13)
-         {
-             alert( "Title must have less than 13 characters ")
-         }else{
-             
-              alert(form.title + " " + form.location + " " + form.description + "" + pickState);
-         }
-         */
+        /*Upload image to firebase storage*/
+
+        /*Upload post to cloud firestore */
+
+
+        var goPush = true;
+        if (form.title !== null) {
+            if (form.title.length > 4 && form.title.length < 13) {
+            } else {
+
+                goPush = false;
+                alert("Title must have less than 13 characters and  more than 4")
+            }
+            if (form.location.length > 5) {
+            } else {
+                goPush = false;
+                alert("Put a location with at least 5 characters ")
+            }
+            if (selectedImage === null) {
+                goPush = false;
+                alert(" You must take an image of what you want to trade")
+            }
+
+            if (goPush) {
+                alert(" Successful data")
+                //alert(form.location +"Name user = "+)
+
+
+                pushData();
+
+
+            }else{
+                
+            }
+        }
+
+
+
     }
+
+    function pushData() {
+
+        const imageName = getShorterName(JSON.stringify(selectedImage))
+        uploadImageFirebaseStorage(selectedImage, imageName).then(() => {
+            // alert("success");
+            console.log(" SUCCESS UPLOAD IMAGE")
+            setIsLoading(false);
+        }).catch(error => {
+            //  alert(error.name);
+            console.log(error)
+        })
+        firebase.firestore().collection('Post')
+            .add({
+                Description: form.description,
+                Etat: pickState,
+                Image: imageName,
+                Location: form.location,
+                Name: userToken.name,
+                Title: form.title,
+                User: userToken.email,
+            })
+            //ensure we catch any errors at this stage to advise us if something does go wrong
+            .catch(error => {
+                console.log('Something went wrong with added user to firestore: ', error);
+            })
+
+        //      navigation.navigate('ChatBox');
+
+
+    }
+    const uploadImageFirebaseStorage = async (uri, imageName) => {
+        console.log(" before uploading - value of uri = " + uri + " short name = " + imageName)
+
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                resolve(xhr.response);
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+        var ref = firebase.storage().ref().child("images/" + imageName);
+
+        let snapshot = await ref.put(blob);
+
+        return await snapshot.ref.getDownloadURL();
+    };
     const Separator = () => (
         <View style={styles.separator} />
     );
     useEffect(() => {
+
+        console.log(" ----------------------New Run--------------------------------------")
+        console.log(" in to Create page ")
         navigator.geolocation.getCurrentPosition(
             (position) => {
-     
-              firebase.auth().currentUser.latitude = position.coords.latitude
-              firebase.auth().currentUser.longitude = position.coords.longitude
-  
-  
-               firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
-                .set({
-                  DarkTheme: false,
-                  Latitude:  firebase.auth().currentUser.latitude,
-                  Longitude:  firebase.auth().currentUser.longitude,
-                  Name: firebase.auth().currentUser.name,
-                })
-                //ensure we catch any errors at this stage to advise us if something does go wrong
-                .catch(error => {
-                      console.log('Something went wrong with added user to firestore: ', error);
-                })
-  
-              // alert(latitude + " // " + longitude);
-              // Add request to DB  HERE - Push the latitude and longitude of the users position
-                setUserToken(  firebase.auth().currentUser)
+
+                firebase.auth().currentUser.latitude = position.coords.latitude
+                firebase.auth().currentUser.longitude = position.coords.longitude
+
+
+                firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+                    .set({
+                        DarkTheme: false,
+                        Latitude: firebase.auth().currentUser.latitude,
+                        Longitude: firebase.auth().currentUser.longitude,
+                        Name: firebase.auth().currentUser.name,
+                    })
+                    //ensure we catch any errors at this stage to advise us if something does go wrong
+                    .catch(error => {
+                        console.log('Something went wrong with added user to firestore: ', error);
+                    })
+
+                // alert(latitude + " // " + longitude);
+                // Add request to DB  HERE - Push the latitude and longitude of the users position
+                setUserToken(firebase.auth().currentUser)
             },
             (error) => console.log(JSON.stringify(error)),
             { enableHighAccuracy: Platform.OS != 'android', maximumAge: 2000 }
-          );
+        );
 
 
     }, [userToken]);
@@ -101,7 +190,7 @@ const Create = () => {
                     onChangeItem={item => setPickState(item.label)}
                 />
                 <Separator />
-                <ImagePicker />
+                <ImagePicker onImageTake={imageTakenHandle} />
                 <Button
                     title="Publish Trade"
                     color="#f7287b"

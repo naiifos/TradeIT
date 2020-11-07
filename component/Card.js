@@ -1,16 +1,23 @@
 
-import React, { useEffect, props } from "react";
+import React, { useEffect,useState, props } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "../styles/CardStyle";
 import { Text, Image, View } from "react-native";
 import UserPhotoName from "../component/UserPhotoName";
-
+import * as firebase from "firebase";
+import 'firebase/firestore';
 export default function Card({ title, state, name, image, location, onPress }) {
 
-  const compactLocation = compactWord(location)
+  const [pickedImage, setPickedImage] = useState(null);
+   const compactLocation = compactWord(location)
+  useEffect(() => {
 
+    console.log("------------------------------------------------------------------------------------------------------------------------")
+    console.log(" In to Card page " + image)
+     getImage(image);
+    
+  }, []);
   function compactWord(word) {
-
 
     if (word.length > 15) {
 
@@ -19,11 +26,15 @@ export default function Card({ title, state, name, image, location, onPress }) {
     }
     return word
   };
-  const iconTrade = {
-    icon: require('../assets/favicon.png')
-  }
-  const iconProfile = {
-    icon: require('../assets/profilepicture.jpg')
+
+  const getImage = async (imageName) => {
+    console.log(" the image that we are going to look for = " +imageName)  
+    let imageRef = firebase.storage().ref('images/' + imageName);
+    const url = await imageRef.getDownloadURL();
+  //  console.log(" value of source uri " + url)
+    setPickedImage(url);
+
+//    console.log(" value of picked image after setting " + pickedImage)
   }
   return (
     <>
@@ -36,14 +47,15 @@ export default function Card({ title, state, name, image, location, onPress }) {
 
             <Text style={styles.cardDescription}>{state}</Text>
 
-            <Text style={styles.cardLocation}>{compactLocation}</Text>
+            <Text style={styles.cardLocation}>{location}</Text>
           </View>
 
           <View style={styles.cardImage}>
             <Image
               style={{ width: "100%", height: "100%", borderRadius: 20 }}
-              source={image}
+              source={{ uri:pickedImage, }}
             />
+
           </View>
         </View>
       </TouchableOpacity>
