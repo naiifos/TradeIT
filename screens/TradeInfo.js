@@ -13,11 +13,11 @@ import {
 import HeaderImageScrollView, {
     TriggeringView,
 } from 'react-native-image-header-scroll-view';
-import UserPhotoName from "../component/UserPhotoName";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from 'react-native-animatable';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import checkButton from '../component/checkButton';
 
 const { width, height } = Dimensions.get('window')
 
@@ -43,10 +43,7 @@ export default function TradeInfo({ route }) {
         latitudeDelta: 0.04,
         longitudeDelta: 0.008
     })
-
-
-    // alert(" data of current position = " +  currentPosition.latitude + " // " + currentPosition.longitude);
-    const navTitleView = useRef(null);
+   const navTitleView = useRef(null);
 
     const { name } = route.params;
     const { title } = route.params;
@@ -54,15 +51,10 @@ export default function TradeInfo({ route }) {
     const { state } = route.params;
     const { location } = route.params;
     const { image } = route.params;
-    
+    useEffect(() => {
+            console.log(" value of image "+image)
+    },)
 
-
-    const imageTradeInfo = {
-        icon: require('../assets/voiture_doccasion.jpg')
-    }
-    const iconProfile = {
-        icon: require('../assets/profilepicture.jpg')
-    }
 
     return (
         <View style={styles.container}>
@@ -74,7 +66,7 @@ export default function TradeInfo({ route }) {
 
                 minOverlayOpacity={0.3}
                 renderHeader={() => (
-                    <Image source={image} style={styles.image} />
+                    <Image source={{ uri:image, }} style={styles.image} />
                 )}
                 renderForeground={() => (
                     <View style={styles.titleContainer}>
@@ -137,7 +129,6 @@ export default function TradeInfo({ route }) {
 
 
                 </View>
-
                 <Button
                     title="Trade IT ?"
                     color="#f7287b"

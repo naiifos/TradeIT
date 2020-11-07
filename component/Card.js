@@ -10,13 +10,7 @@ export default function Card({ title, state, name, image, location, onPress }) {
 
   const [pickedImage, setPickedImage] = useState(null);
    const compactLocation = compactWord(location)
-  useEffect(() => {
 
-    console.log("------------------------------------------------------------------------------------------------------------------------")
-    console.log(" In to Card page " + image)
-     getImage(image);
-    
-  }, []);
   function compactWord(word) {
 
     if (word.length > 15) {
@@ -27,15 +21,7 @@ export default function Card({ title, state, name, image, location, onPress }) {
     return word
   };
 
-  const getImage = async (imageName) => {
-    console.log(" the image that we are going to look for = " +imageName)  
-    let imageRef = firebase.storage().ref('images/' + imageName);
-    const url = await imageRef.getDownloadURL();
-  //  console.log(" value of source uri " + url)
-    setPickedImage(url);
 
-//    console.log(" value of picked image after setting " + pickedImage)
-  }
   return (
     <>
       <TouchableOpacity onPress={onPress} style={styles.card}>
@@ -53,7 +39,7 @@ export default function Card({ title, state, name, image, location, onPress }) {
           <View style={styles.cardImage}>
             <Image
               style={{ width: "100%", height: "100%", borderRadius: 20 }}
-              source={{ uri:pickedImage, }}
+              source={{ uri:image, }}
             />
 
           </View>

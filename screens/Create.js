@@ -14,13 +14,13 @@ import * as firebase from "firebase";
 import 'firebase/firestore';
 import { useNavigation } from "@react-navigation/native";
 
-import {AuthContext} from '../component/Context';
+import { AuthContext } from '../component/Context';
 const Create = () => {
 
     const navigation = useNavigation()
     const [userToken, setUserToken] = useState(" ");
     const [selectedImage, setSelectedImage] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+
 
     const [form, setForm] = useState({
         title: "",
@@ -73,47 +73,33 @@ const Create = () => {
                 pushData();
 
 
-            }else{
-                
+            } else {
+
             }
         }
 
-
+    }
+    const getImage = async (imageName) => {
+        let imageRef = firebase.storage().ref('images/' + imageName);
+        const url = await imageRef.getDownloadURL();
+        setPickedImage(url);
 
     }
-
     function pushData() {
 
         const imageName = getShorterName(JSON.stringify(selectedImage))
+
         uploadImageFirebaseStorage(selectedImage, imageName).then(() => {
             // alert("success");
             console.log(" SUCCESS UPLOAD IMAGE")
-            setIsLoading(false);
+
         }).catch(error => {
             //  alert(error.name);
             console.log(error)
         })
-        firebase.firestore().collection('Post')
-            .add({
-                Description: form.description,
-                Etat: pickState,
-                Image: imageName,
-                Location: form.location,
-                Name: userToken.name,
-                Title: form.title,
-                User: userToken.email,
-            })
-            //ensure we catch any errors at this stage to advise us if something does go wrong
-            .catch(error => {
-                console.log('Something went wrong with added user to firestore: ', error);
-            })
-
-        //      navigation.navigate('ChatBox');
-
 
     }
     const uploadImageFirebaseStorage = async (uri, imageName) => {
-        console.log(" before uploading - value of uri = " + uri + " short name = " + imageName)
 
         const blob = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -124,11 +110,30 @@ const Create = () => {
             xhr.open('GET', uri, true);
             xhr.send(null);
         });
-        var ref = firebase.storage().ref().child("images/" + imageName);
+        try {
+            var ref = firebase.storage().ref().child("images/" + imageName);
+            await ref.put(blob);
+            let imageRef = firebase.storage().ref('images/' + imageName);
+            const url = await imageRef.getDownloadURL();
+           
+            firebase.firestore().collection('Post')
+            .add({
+                Description: form.description,
+                Etat: pickState,
+                Image: url,
+                Location: form.location,
+                Name: userToken.name,
+                Title: form.title,
+                User: userToken.email,
+            })
+            //ensure we catch any errors at this stage to advise us if something does go wrong
+            .catch(error => {
+                console.log('Something went wrong with added user to firestore: ', error);
+            })
+        } catch (e) {
+            console.log(e);
+        }
 
-        let snapshot = await ref.put(blob);
-
-        return await snapshot.ref.getDownloadURL();
     };
     const Separator = () => (
         <View style={styles.separator} />
@@ -136,7 +141,7 @@ const Create = () => {
     useEffect(() => {
 
         console.log(" ----------------------New Run--------------------------------------")
-        console.log(" in to Create page ")
+        //     console.log(" in to Create page ")
         navigator.geolocation.getCurrentPosition(
             (position) => {
 

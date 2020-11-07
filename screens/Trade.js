@@ -7,29 +7,42 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from '../component/Context';
 
 export default function Trade() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigation = useNavigation()
     const [data, setData] = useState([]);
-    const [bool, setBool] = useState(false);
-    var boolean = true;
+    const [fullData, setFullData] = useState([]);
 
+    const handleSearch = text => {
+        const results = fullData.filter(item =>
+            item.Title.toString().toLowerCase().includes(text.toLowerCase())
+        );
 
+      
+        setData(results);
+        setSearchTerm(text);
+        console.log("  Full Data Table  "+fullData.length)
+        console.log("  Data Table  "+data.length)
+  
+    };
+    const tradePage = (item) => {
+
+        navigation.navigate('TradeInfo', {
+
+            title: item.Title,
+            name: item.Name,
+            image: item.Image,
+            state: item.Etat,
+            location: item.Location,
+            description: item.Description,
+        });
+
+    }
+   
     useEffect(() => {
-        
+
         setLoading(true)
-        console.log(" in to bool timer ")
-        console.log(" size of data table " + data.length)
-        setTimeout(
-            function () {
-
-                setLoading(false)
-            }, 5000);
-        console.log(" after timer ")
-
-    }, [data])
-    useEffect(() => {
-
-        console.log(" Trade page ---------- ")
-        const subscriber = firebase.firestore()
+        firebase.firestore()
             .collection('Post')
             .onSnapshot(querySnapshot => {
                 const users = [];
@@ -40,87 +53,23 @@ export default function Trade() {
                         key: documentSnapshot.id,
                     });
                 });
-
                 setData(users);
+                setFullData(users)
+                setLoading(false)
 
-
-                //   console.log(" value of data retrieved from db == "+ data)
+            
             });
-        subscriber;
-
     }, [])
 
-
-    const iconTrade = {
-        icon: require('../assets/voiture_doccasion.jpg')
-    }
-
-    const [tradesAdverts, setTrades] = useState([
-        /* Pull the data from DB, get all the trades adverts and store them in to tradesAdverts hook*/
-        { title: 'Ballon', state: 'Use', image: iconTrade.icon, location: 'Rue Claessens, 21', name: 'Sofian', description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ', id: '1' },
-        {
-            title: 'Bateau', state: 'New', image: iconTrade.icon, location: 'Liege-Belgium', name: 'Moundir',
-            description: 'Voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. voiture a troc contre une moto si possible. Veuillez accepter le trade si vous voulez. ',
-            id: '2'
-        },
-        { title: 'Chaussuressss', state: 'New', image: iconTrade.icon, location: 'Brussels-Belgium', name: 'Mohamed', description: 'hollaaaqq', id: '3' },
-
-    ]);
-
-    const tradePage = (item) => {
-
-
-        navigation.navigate('TradeInfo', {
-
-            title: item.title,
-            name: item.name,
-            image: item.image,
-            state: item.state,
-            location: item.location,
-            id: item.id,
-            description: item.description,
-        });
-
-        /* ajouter l'algo pour laisser que 13 caracheteres de la localisation */
-
-    }
-
-    const handleSearch = text => {
-        setSearchTerm(text);
-    };
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [tampon, setTampon] = useState([]);
-    const [isEmpty, setIsEmpty] = useState(false);
-    const navigation = useNavigation()
-
-
-    useEffect(() => {
-        let results = tampon.filter(item =>
-            item.title.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        if (searchTerm.toString().length === 0) {
-            if (!isEmpty) {
-                console.log("avant d'effectuer la recherche voici la valeur de data " + data)
-                setTampon(data); /* il faut que data soit rempli a ce moment du code - ajouter un await un qlq chose du genre */
-                setIsEmpty(true)
-            } else {
-                setTrades(tampon);
-            }
-        } else {
-
-            setTrades(results);
-
-        }
-
-
-
-    }, [searchTerm]);
+   
 
     if (loading) {
-        return <ActivityIndicator />
-    }
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#f7287b" />
+          </View>
+        );
+      }
 
 
     return (
@@ -162,27 +111,5 @@ export default function Trade() {
         </View>
     );
 };
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f8f8f8',
-        alignItems: 'center'
-    },
-    text: {
-        fontSize: 20,
-        color: '#101010',
-        marginTop: 60,
-        fontWeight: '700'
-    },
-    listItem: {
-        marginTop: 10,
-        padding: 20,
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        width: '100%'
-    },
-    listItemText: {
-        fontSize: 18
-    }
-});
+
 
