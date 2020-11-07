@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from 'react-native-animatable';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import checkButton from '../component/checkButton';
+import CheckButton from '../component/CheckButton';
 
 const { width, height } = Dimensions.get('window')
 
@@ -129,12 +129,8 @@ export default function TradeInfo({ route }) {
 
 
                 </View>
-                <Button
-                    title="Trade IT ?"
-                    color="#f7287b"
-                    fontSize="12"
-                    onPress={() => goRedirection()}
-                />
+                <CheckButton user="nothing"/>
+             
 
             </HeaderImageScrollView>
         </View>
