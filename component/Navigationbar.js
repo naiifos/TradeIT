@@ -246,7 +246,8 @@ function CustomDrawerContent(props) {
         </DrawerContentScrollView>
     );
 }
-const ChatStackNavigator = createDrawerNavigator();
+
+const ChatStackNavigator = createStackNavigator();
 function ChatNavigation() {
 
     return (
@@ -259,8 +260,6 @@ function ChatNavigation() {
     );
 
 }
-
-
 export default function App() {
 
 

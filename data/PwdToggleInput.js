@@ -1,27 +1,104 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Switch} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, Button} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import * as firebase from "firebase";
 
 export default function pwdToggleInput() {
+    //current pwd
     const [pwdChange, setPwdChange] = useState(true);
+    const [pwdValue, setPwdValue] = useState("");
+    const [isPwdOk, setIsPwdOK] = useState("true");
+    const [textVerif, setTextVerif] = useState("");
     const [iconName, setIconName] = useState("eye");
+    //new pwd
+    const [newPwdChange, setNewPwdChange] = useState(true);
+    const [newPwdValue, setNewPwdValue] = useState("");
+    const [isNewPwdOk, setIsNewPwdOK] = useState("true");
+    const [newTextVerif, setNewTextVerif] = useState("");
+    const [newIconName, setNewIconName] = useState("eye");
+    //
+
     const [isNotifEnabled, setIsNotifEnabled] = useState(true);//notif are enabled (donc on recoit les notifs)
     const toggleNotifSwitch = () => setIsNotifEnabled(previousState => !previousState);
+
+    //Firebase
+    const user = firebase.auth().currentUser;
+
+    //
     const onIconPress = () => {
         setIconName(pwdChange ? "eye-off" : "eye");
         setPwdChange(!pwdChange);
 
     }
+    const onNewIconPress = () => {
+        setNewIconName(newPwdChange ? "eye-off" : "eye");
+        setNewPwdChange(!newPwdChange);
+
+    }
+    const onChangePwd = (pwd) => {
+        setPwdValue(pwd);
+    }
+    const onChangeNewPwd = (pwd) => {
+        setNewPwdValue(pwd);
+    }
+    const changePwd = () => {
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, pwdValue);
+        user.reauthenticateWithCredential(credential)
+            .then(function () {
+                // User re-authenticated.
+            }).catch(function (error) {
+                setTextVerif("Wrong password.");
+                // An error happened.
+        });
+        if (newPwdValue === "") {
+            setTextVerif("New password cannot be empty!");
+        }
+        else if(newPwdValue.length<6){
+            setTextVerif("Put more than 6 characters!");
+        }
+        else {
+            user.updatePassword(newPwdValue)
+                .then(r => {
+                    setTextVerif("Password SAVED.");
+                    setPwdValue("");
+                    setNewPwdValue("");
+                })
+                .catch(error => {
+                    alert("the error: " + error);
+                })
+            ;
+        }
+    }
     return (
         <View>
             <View style={styles.pwdView}>
-                <Text style={styles.pwdModify}>Modify password</Text>
-                <View style={styles.global}>
-                    <TextInput secureTextEntry={pwdChange} style={styles.pwdInput}/>
-                    <TouchableOpacity onPress={onIconPress}>
-                        <Icon name={iconName} style={styles.eyeIcon} size={30}/>
-                    </TouchableOpacity>
+                <View style={styles.textPwdModify}>
+                    <Text style={styles.pwdModify}>Modify password</Text>
+                    <View><Text>{textVerif}</Text></View>
                 </View>
+                <View style={styles.global}>
+                    <TextInput placeholder={"Current password"} value={pwdValue} secureTextEntry={pwdChange}
+                               style={styles.pwdInput} onChangeText={(value) => onChangePwd(value)}/>
+                    <TouchableOpacity onPress={onIconPress}>
+                        <Icon name={iconName} color={"#81a1ff"} style={styles.eyeIcon} size={30}/>
+                    </TouchableOpacity>
+
+                </View>
+                <View style={styles.global}>
+                    <TextInput placeholder={"New password"} value={newPwdValue} secureTextEntry={newPwdChange}
+                               style={styles.pwdInput} onChangeText={(value) => onChangeNewPwd(value)}/>
+                    <TouchableOpacity onPress={onNewIconPress}>
+                        <Icon name={newIconName} color={"#81a1ff"} style={styles.eyeIcon} size={30}/>
+                    </TouchableOpacity>
+
+                </View>
+                <View style={styles.savePwdChanges}>
+                    <Button
+                        title="Save changes"
+                        onPress={changePwd}
+                    />
+                </View>
+
             </View>
             <View style={styles.notifView}>
                 <Text style={styles.pwdModify}>Receive notifications</Text>
@@ -44,7 +121,11 @@ export default function pwdToggleInput() {
     )
 }
 const styles = StyleSheet.create({
-    pwdView:{
+    textPwdModify: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    pwdView: {
         margin: 10,
     },
     global: {
@@ -63,14 +144,17 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '700',
     },
+    savePwdChanges: {
+        marginTop: 10,
+    },
     enableNotif: {
         flexDirection: 'row',
         alignItems: 'center',
-        margin:10,
+        margin: 10,
 
     },
-    enableText:{
-      flex:1,
+    enableText: {
+        flex: 1,
     },
     notifView: {
         borderBottomWidth: 1,
