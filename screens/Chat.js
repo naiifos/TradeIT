@@ -47,16 +47,4 @@ const styles = StyleSheet.create({
     },
 
 });
-/*
-<FlatList
-    data={info}
-    keyExtractor={item => item.id}
-    renderItem={({item}) => (
-        <ChatCard
-            name={item.name}
-            date={item.date}
-            comment={item.comment}
-            onPress={() => chatClicked()}
-        />
-    )}
-/>*/
+
