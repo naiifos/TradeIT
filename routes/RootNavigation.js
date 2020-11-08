@@ -18,7 +18,6 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-    const Stack = createStackNavigator();
 
 const Stack = createStackNavigator();
 export default function () {

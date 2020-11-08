@@ -52,12 +52,11 @@ export default function TradeInfo({ route }) {
 
             name: firebase.auth().currentUser.email,
             date:  new Date().getDate(),
-          
+
         });
     }
 
     useEffect(() => {
-
 
 
         const results = firebase.firestore()

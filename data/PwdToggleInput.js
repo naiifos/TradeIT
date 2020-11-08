@@ -17,13 +17,12 @@ export default function pwdToggleInput() {
     const [newTextVerif, setNewTextVerif] = useState("");
     const [newIconName, setNewIconName] = useState("eye");
     //
-
     const [isNotifEnabled, setIsNotifEnabled] = useState(true);//notif are enabled (donc on recoit les notifs)
     const toggleNotifSwitch = () => setIsNotifEnabled(previousState => !previousState);
 
     //Firebase
-    const user = firebase.auth().currentUser;
-
+    const userEmail =firebase.auth().currentUser ? firebase.auth().currentUser.email : "user pas connue";
+    const user=firebase.auth().currentUser;
     //
     const onIconPress = () => {
         setIconName(pwdChange ? "eye-off" : "eye");
@@ -42,7 +41,7 @@ export default function pwdToggleInput() {
         setNewPwdValue(pwd);
     }
     const changePwd = () => {
-        const credential = firebase.auth.EmailAuthProvider.credential(user.email, pwdValue);
+        const credential = firebase.auth.EmailAuthProvider.credential(userEmail, pwdValue);
         user.reauthenticateWithCredential(credential)
             .then(function () {
                 // User re-authenticated.
