@@ -6,8 +6,11 @@ import * as firebase from "firebase";
 import Navigationbar from "./component/Navigationbar";
 import { firebaseConfig } from "./config";
 import { AuthContext } from './component/Context';
-import UserDataManagement from './singleton/UserDataManagement';
-import Test from './screens/Test';
+import {
+  View,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import 'firebase/firestore';
 export default function App() {
   if (!firebase.apps.length) {
@@ -20,68 +23,82 @@ export default function App() {
 
   }, []);
   const [userToken, setUserToken] = useState(null);
-  const [latitude, setLatitude] = useState("initialized");
+  const [isLoading, setIsLoading] = useState(true);
+  const [signUP, setSignUp] = useState(false);
   const Stack = createStackNavigator();
+
   const authContext = React.useMemo(() => ({
 
     signIn: (email, pwd) => { signinHandler(email, pwd); },
     signOut: () => { if (userToken !== null) { firebase.auth().signOut(); alert(" deconnexion  de " + userToken.email); setUserToken(null); console.log(" value of user token when logout " + firebase.auth().currentUser.email) } else { alert(" pas de deconnexion") } },
-    signUp: (email, pwd) => { signupHandler(email, pwd); },
+    signUp: (email, pwd) => { signupHandler(email, pwd); setSignUp(true) },
 
   }));
-
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
 
-    //  console.log(" Traitement ajout db de " +firebase.auth().currentUser.email)
-      firebase.auth().currentUser.name = returnNameFromEmail(firebase.auth().currentUser.email);
-      firebase.auth().currentUser.longitude = 0;
-      firebase.auth().currentUser.latitude = 0;
-      firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
-        .set({
-          DarkTheme: false,
-          Latitude: 1,
-          Longitude: 0,
-          Name: firebase.auth().currentUser.name,
-        })
-        //ensure we catch any errors at this stage to advise us if something does go wrong
-        .catch(error => {
-          console.log('Something went wrong with added user to firestore: ', error);
-        })
-  
-   //   console.log(" User "+firebase.auth().currentUser.email + " ajouté " )
-      firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
 
-            firebase.auth().currentUser.name = doc.data().Name
-            firebase.auth().currentUser.latitude = doc.data().Latitude
-            firebase.auth().currentUser.longitude = doc.data().Longitude
-    //        console.log("Document data in async authState :", firebase.auth().currentUser.name + "  " + firebase.auth().currentUser.latitude + "  " + firebase.auth().currentUser.longitude);
+      if (signUP) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
 
-            setUserToken(firebase.auth().currentUser)
+            firebase.auth().currentUser.latitude = position.coords.latitude
+            firebase.auth().currentUser.longitude = position.coords.longitude
+            firebase.auth().currentUser.name = returnNameFromEmail(firebase.auth().currentUser.email);
 
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        }).catch(function (error) {
-          console.log("Error getting document:", error);
-        }); console.log("Document data outside async authState :", firebase.auth().currentUser.name + "  " + firebase.auth().currentUser.latitude + "  " + firebase.auth().currentUser.longitude);
+            firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+              .set({
+                DarkTheme: false,
+                Latitude: firebase.auth().currentUser.latitude,
+                Longitude: firebase.auth().currentUser.longitude,
+                Name: firebase.auth().currentUser.name,
+              })
+              //ensure we catch any errors at this stage to advise us if something does go wrong
+              .catch(error => {
+                console.log('Something went wrong with added user to firestore: ', error);
+              })
 
+            console.log(" NOUVEAU USER INSCRIS " + firebase.auth().currentUser.email)
 
+            setSignUp(false);
+          },
+          (error) => console.log(JSON.stringify(error)),
+          { enableHighAccuracy: Platform.OS != 'android', maximumAge: 2000 }
+        );
 
+      } else {
+        console.log(" connexion normale de " + firebase.auth().currentUser.email)
+        firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+          .get()
+          .then(function (doc) {
+            if (doc.exists) {
+
+              firebase.auth().currentUser.name = doc.data().Name
+              firebase.auth().currentUser.latitude = doc.data().Latitude
+              firebase.auth().currentUser.longitude = doc.data().Longitude
+              setUserToken(firebase.auth().currentUser)
+              setIsLoading(false);
+            } else {
+              console.log("No such document!");
+            }
+          }).catch(function (error) {
+            console.log("Error getting document:", error);
+          });
+
+      }
 
 
     } else {
-  //    console.log(" setting null user token ")
       setUserToken(null)
 
     }
   })
 
+  function returnNameFromEmail(string) {
+
+    return string.substring(0, string.indexOf('@'))
+  }
   function signupHandler(email, pwd) {
 
     /* storing auth */
@@ -92,21 +109,10 @@ export default function App() {
       alert(errorCode + " - " + errorMessage)
       // ...
     });
+    setSignUp(true);
     /* storing cloud firestore user */
-
-
-
-   
-
-
-
-
   }
 
-  function returnNameFromEmail(string) {
-
-    return string.substring(0, string.indexOf('@'))
-  }
 
   function signinHandler(email, pwd) {
 
@@ -120,7 +126,21 @@ export default function App() {
     });
 
   }
+  if (signUP) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#f7287b" />
+      </View>
+    );
+  } else if (isLoading) {
+    return (
 
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#f7287b" />
+      </View>
+    );
+  }
   return (
 
 

@@ -18,17 +18,17 @@ import * as Animatable from 'react-native-animatable';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CheckButton from '../component/CheckButton';
-
+import * as firebase from "firebase";
+import 'firebase/firestore';
 const { width, height } = Dimensions.get('window')
 
 const MIN_HEIGHT = Platform.OS === 'ios' ? 90 : 55;
 const MAX_HEIGHT = 350;
-const iconTrade = {
-    icon: require('../assets/voiture_doccasion.jpg')
-}
+
 export default function TradeInfo({ route }) {
 
     const navigation = useNavigation()
+    const [userToken,setUserToken] = useState(null);
     const goRedirection = () => {
         
         navigation.navigate('ChatBox');
@@ -52,8 +52,13 @@ export default function TradeInfo({ route }) {
     const { location } = route.params;
     const { image } = route.params;
     useEffect(() => {
-            console.log(" value of image "+image)
-    },)
+
+        console.log(" In to Trade Info page")
+           // console.log(" value of image "+image)
+          //  console.log(" current position of user = "+ firebase.auth().currentUser.longitude + " / " +firebase.auth().currentUser.latitude)
+            
+            
+    },[])
 
 
     return (
@@ -115,8 +120,8 @@ export default function TradeInfo({ route }) {
                         region={{
                             latitude: currentPosition.latitude,
                             longitude: currentPosition.longitude,
-                            latitudeDelta: currentPosition.latitudeDelta,
-                            longitudeDelta: currentPosition.longitudeDelta,
+                            latitudeDelta:0.04,
+                            longitudeDelta: 0.008,
                         }}>
                         <MapView.Marker
                             coordinate={{

@@ -135,8 +135,6 @@ const Create = () => {
     );
     useEffect(() => {
 
-        console.log(" ----------------------New Run--------------------------------------")
-        //     console.log(" in to Create page ")
         navigator.geolocation.getCurrentPosition(
             (position) => {
 

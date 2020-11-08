@@ -5,10 +5,28 @@ import 'firebase/firestore';
 const checkButton = (props) => {
 
     const currentUser =firebase.auth().currentUser.email;
+    /*
     useEffect(() => {
+        
+        firebase.firestore()
+        .collection('Post')
+        .onSnapshot(querySnapshot => {
+            const users = [];
 
-        console.log(" current user  "  + firebase.auth().currentUser.email)
+            querySnapshot.forEach(documentSnapshot => {
+                users.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                });
+            });
+            setData(users);
+            setFullData(users)
+            setLoading(false)
+
+        
+        });
     }, []);
+    */
     const user = "fcbarcelone@outlook.com";
     /*check if the current user is the one who posted */
   
