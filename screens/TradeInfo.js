@@ -118,15 +118,15 @@ export default function TradeInfo({ route }) {
                         style={{ flex: 1 }}
 
                         region={{
-                            latitude: currentPosition.latitude,
-                            longitude: currentPosition.longitude,
+                            latitude: firebase.auth().currentUser.latitude,
+                            longitude:  firebase.auth().currentUser.longitude,
                             latitudeDelta:0.04,
                             longitudeDelta: 0.008,
                         }}>
                         <MapView.Marker
                             coordinate={{
-                                latitude: currentPosition.latitude,
-                                longitude: currentPosition.longitude
+                                latitude: firebase.auth().currentUser.latitude,
+                                longitude:  firebase.auth().currentUser.longitude,
                             }}
                             description={location}
                         />
