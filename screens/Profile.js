@@ -1,6 +1,7 @@
 //ctrl+f et chercher bdd. tout les commentaires avec bdd c'est qu'il faut changer
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import {StatusBar} from 'expo-status-bar';
+import React, {useState, useEffect} from 'react';
+import {firebaseConfig} from '../config';
 import {
     StyleSheet,
     Text,
@@ -8,21 +9,33 @@ import {
     Image,
     Dimensions,
     Animated,
+    TouchableWithoutFeedback,
+    Button,
+    TouchableOpacity,
 } from 'react-native';
-import data from '../data/ProfileData';
+//import data from '../data/ProfileData';
+import * as firebase from "firebase";
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 /*const LOGO_WIDTH = 220; ici c'est pour le logo qui vient en bas à gauche (je l'ai enlever d'ailleur)
 const LOGO_HEIGHT = 40;*/
 const DOT_SIZE = 40;
 const TICKER_HEIGHT = 15;
 const CIRCLE_SIZE = width * 0.6;
-const userName="Moundir";//bdd => mettre le pseudo de firebase
+//const userName = "Moundir";//bdd => mettre le pseudo de firebase
+let itemToDelete;
+//Firebase
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
 
-const Circle = ({ scrollX }) => {
+//
+
+
+const Circle = ({scrollX, data}) => {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.circleContainer]}>
-            {data.map(({ color }, index) => {
+            {data.map(({color}, index) => {
                 const inputRange = [
                     (index - 0.55) * width,
                     index * width,
@@ -45,7 +58,7 @@ const Circle = ({ scrollX }) => {
                             {
                                 backgroundColor: color,
                                 opacity,
-                                transform: [{ scale }],
+                                transform: [{scale}],
                             },
                         ]}
                     />
@@ -55,33 +68,16 @@ const Circle = ({ scrollX }) => {
     );
 };
 
-const Ticker = ({ scrollX }) => {
-    /*const inputRange = [-width, 0, width];
-    const translateY = scrollX.interpolate({
-        inputRange,
-        outputRange: [TICKER_HEIGHT, 0, -TICKER_HEIGHT],
-    });
+const Ticker = ({scrollX}) => {
+
     return (
         <View style={styles.tickerContainer}>
-            <Animated.View style={{ transform: [{ translateY }] }}>
-                {data.map(({ type }, index) => {
-                    return (
-                        <Text key={index} style={styles.tickerText}>
-                            {userName}
-                        </Text>
-                    );
-                })}
-            </Animated.View>
-        </View>
-    );*/
-    return(
-        <View style={styles.tickerContainer}>
-            <Text style={styles.tickerText}>{userName}</Text>
+            <Text style={styles.tickerText}>{firebase.auth().currentUser.name}</Text>
         </View>
     )
 };
 
-const Item = ({ imageUri, heading, description, index, scrollX }) => {
+const Item = ({imageUri, heading, description, index, scrollX}) => {
     const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
     const inputRangeOpacity = [
         (index - 0.3) * width,
@@ -108,11 +104,11 @@ const Item = ({ imageUri, heading, description, index, scrollX }) => {
     return (
         <View style={styles.itemStyle}>
             <Animated.Image
-                source={imageUri}
+                source={{uri: imageUri}}
                 style={[
                     styles.imageStyle,
                     {
-                        transform: [{ scale }],
+                        transform: [{scale}],
                     },
                 ]}
             />
@@ -122,7 +118,7 @@ const Item = ({ imageUri, heading, description, index, scrollX }) => {
                         styles.heading,
                         {
                             opacity,
-                            transform: [{ translateX: translateXHeading }],
+                            transform: [{translateX: translateXHeading}],
                         },
                     ]}
                 >
@@ -148,7 +144,7 @@ const Item = ({ imageUri, heading, description, index, scrollX }) => {
     );
 };
 
-const Pagination = ({ scrollX }) => {
+const Pagination = ({scrollX, data}) => {
     const inputRange = [-width, 0, width];
     const translateX = scrollX.interpolate({
         inputRange,
@@ -162,7 +158,7 @@ const Pagination = ({ scrollX }) => {
                     {
                         position: 'absolute',
                         // backgroundColor: 'red',
-                        transform: [{ translateX }],
+                        transform: [{translateX}],
                     },
                 ]}
             />
@@ -170,7 +166,7 @@ const Pagination = ({ scrollX }) => {
                 return (
                     <View key={item.key} style={styles.paginationDotContainer}>
                         <View
-                            style={[styles.paginationDot, { backgroundColor: item.color }]}
+                            style={[styles.paginationDot, {backgroundColor: item.color}]}
                         />
                     </View>
                 );
@@ -178,32 +174,75 @@ const Pagination = ({ scrollX }) => {
         </View>
     );
 };
-
-export default function App() {
+export default function Profile({navigation}) {
     const scrollX = React.useRef(new Animated.Value(0)).current;
+    const [result, setResult] = useState([]);
+    const [butState, setButState] = useState(false);
+    let count=0;
+    useEffect(() => {
+                firebase.firestore().collection("Post").where("User", "==", firebase.auth().currentUser.email)
+                    .get()
+                    .then(function (querySnapshot) {
+                        const data=[];
+                        console.log("into useeffect");
+                        querySnapshot.forEach(function (doc) {
+                            if(count===0){
+                                itemToDelete=doc.id;
+                            }
+                            count++;
+                            data.push({type:'Human',imageUri:doc.data().Image,heading:doc.data().Title,
+                                description:doc.data().Description, key:doc.id,color:'#9dcdfa'});
+                        });
+                        setResult(data);
+                    })
+                    .catch(function (error) {
+                        console.log("Error getting documents: ", error);
+                    });
+    }, [butState,navigation]);
+    const deletePost= () => {
+        setButState(!butState);
+        console.log(" item to delete = "+ itemToDelete)
+        firebase.firestore().collection("Post").doc(itemToDelete).delete().then(function() {
+            //ajouter un code qui va supprimer aussi en local dans results
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+    }
+    const onViewRef = React.useRef((viewableItems)=> {
 
+        console.log("---------------------------- New Item ------------------------");
+        console.log(viewableItems.viewableItems[0].key);
+        itemToDelete=viewableItems.viewableItems[0].key;
+        // Use viewable items in state or as intended
+    })
+
+    const viewConfigRef = React.useRef({ viewAreaCoveragePercentThreshold: 50 })
     return (
         <View style={styles.container}>
-            <StatusBar style='auto' hidden />
-            <Circle scrollX={scrollX} />
-            <Animated.FlatList
-                keyExtractor={(item) => item.key}
-                data={data}
-                renderItem={({ item, index }) => (
-                    <Item {...item} index={index} scrollX={scrollX} />
-                )}
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                    { useNativeDriver: true }
-                )}
-                scrollEventThrottle={16}
-            />
+            <StatusBar style='auto' hidden/>
+            <Circle scrollX={scrollX} data={result}/>
 
-            <Pagination scrollX={scrollX} />
-            <Ticker scrollX={scrollX} />
+                <Animated.FlatList
+                    keyExtractor={(item) => item.key}
+                    data={result}
+                    renderItem={({item, index}) => (
+                        <Item {...item} index={index} scrollX={scrollX}/>
+                    )}
+                    onViewableItemsChanged={onViewRef.current}
+                    viewabilityConfig={viewConfigRef.current}
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    onScroll={Animated.event(
+                        [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                        {useNativeDriver: true}
+                    )}
+                    scrollEventThrottle={16}
+                />
+            <Pagination scrollX={scrollX} data={result}/>
+            <Ticker scrollX={scrollX} data={result}/>
+            <Button style={{  color:"#f7287b"}}title="DELETE" onPress={deletePost}/>
         </View>
     );
 }
@@ -217,7 +256,7 @@ const styles = StyleSheet.create({
         height,
         alignItems: 'center',
         justifyContent: 'center',
-        bottom:45,
+        bottom: 45,
     },
     imageStyle: {
         width: width * 0.75,
@@ -229,7 +268,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         alignSelf: 'flex-end',
         flex: 0.5,
-        bottom:60,
+        bottom: 60,
     },
     heading: {
         color: '#444',
