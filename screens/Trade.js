@@ -27,7 +27,7 @@ export default function Trade() {
     };
     const tradePage = (item) => {
 
-        console.log("user email = "+item.User)
+        console.log("user email =   "+item.User)
         navigation.navigate('TradeInfo', {
 
             title: item.Title,
