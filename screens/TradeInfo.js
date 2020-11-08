@@ -8,6 +8,7 @@ import {
     Dimensions,
     StatusBar,
     Platform,
+    ActivityIndicator,
 } from 'react-native';
 
 import HeaderImageScrollView, {
@@ -27,23 +28,8 @@ const MAX_HEIGHT = 350;
 
 export default function TradeInfo({ route }) {
 
-    const navigation = useNavigation()
-    const [userToken,setUserToken] = useState(null);
-    const goRedirection = () => {
-        
-        navigation.navigate('ChatBox');
-    }
-
-
-    /*Pull request from DB with longitude and latitude of the user who posted and put it in currentPosition Hook*/
-    const [currentPosition, setCurrentPosition] = useState({
-
-        latitude: 50.87291567821333,
-        longitude: 4.358049109120915,
-        latitudeDelta: 0.04,
-        longitudeDelta: 0.008
-    })
-   const navTitleView = useRef(null);
+    const navigation = useNavigation();
+    const navTitleView = useRef(null);
 
     const { name } = route.params;
     const { title } = route.params;
@@ -51,16 +37,51 @@ export default function TradeInfo({ route }) {
     const { state } = route.params;
     const { location } = route.params;
     const { image } = route.params;
+    const { id } = route.params;
+    const { user } = route.params;
+    const [latitude, setLatitude] = useState("null")
+    const [longitude, setLongitude] = useState("null")
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+
     useEffect(() => {
 
-        console.log(" In to Trade Info page")
-           // console.log(" value of image "+image)
-          //  console.log(" current position of user = "+ firebase.auth().currentUser.longitude + " / " +firebase.auth().currentUser.latitude)
-            
-            
-    },[])
 
 
+        const results = firebase.firestore()
+            .collection('User')
+            .doc(user)
+            .get()
+            .then(function (doc) {
+                if (doc.exists) {
+                    parseInt(doc.data().Latitude)
+                    parseInt(doc.data().Longitude)
+
+                    setLatitude(doc.data().Latitude);
+                    setLongitude(doc.data().Longitude);
+
+
+                    console.log(typeof longitude)
+                    console.log(typeof latitude)
+                    //     setIsLoading(false);
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function (error) {
+                console.log("Error getting document:", error);
+            });
+
+        return () => results
+    }, [])
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#f7287b" />
+            </View>
+        );
+    }
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" />
@@ -71,13 +92,13 @@ export default function TradeInfo({ route }) {
 
                 minOverlayOpacity={0.3}
                 renderHeader={() => (
-                    <Image source={{ uri:image, }} style={styles.image} />
+                    <Image source={{ uri: image, }} style={styles.image} />
                 )}
                 renderForeground={() => (
                     <View style={styles.titleContainer}>
                         <Text style={styles.imageTitle}>{title}</Text>
                     </View>
-                )} 
+                )}
                 renderFixedForeground={() => (
                     <Animatable.View style={styles.navTitleView} ref={navTitleView}>
                         <Text style={styles.navTitle}></Text>
@@ -95,7 +116,7 @@ export default function TradeInfo({ route }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
                         <Text style={styles.title}>{name}</Text>
-                      
+
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                             <FontAwesome name="star" size={16} color="#FF6347" />
 
@@ -103,11 +124,11 @@ export default function TradeInfo({ route }) {
                             <Text>{state}</Text>
                         </View>
                     </View>
-                   
-                        <Text style={styles.adress}>{location}</Text>
-                      
-                   
-                    
+
+                    <Text style={styles.adress}>{location}</Text>
+
+
+
                 </TriggeringView>
                 <View style={[styles.section]}>
                     <Text style={styles.sectionContent}>{description}</Text>
@@ -118,15 +139,15 @@ export default function TradeInfo({ route }) {
                         style={{ flex: 1 }}
 
                         region={{
-                            latitude: firebase.auth().currentUser.latitude,
-                            longitude:  firebase.auth().currentUser.longitude,
-                            latitudeDelta:0.04,
+                            latitude: latitude,
+                            longitude: longitude,
+                            latitudeDelta: 0.04,
                             longitudeDelta: 0.008,
                         }}>
                         <MapView.Marker
                             coordinate={{
-                                latitude: firebase.auth().currentUser.latitude,
-                                longitude:  firebase.auth().currentUser.longitude,
+                                latitude: latitude,
+                                longitude: longitude,
                             }}
                             description={location}
                         />
@@ -134,8 +155,29 @@ export default function TradeInfo({ route }) {
 
 
                 </View>
-                <CheckButton user="nothing"/>
-             
+                <View>
+                    {
+
+                        user !== firebase.auth().currentUser.email ?
+                            (
+                                <Button
+                                    title="Trade IT ?"
+                                    color="#f7287b"
+                                    fontSize="12"
+                                    onPress={() => goRedirection()}
+                                />
+
+                            ) : (
+
+                                <View>
+
+                                </View>
+
+                            )}
+
+
+                </View>
+
 
             </HeaderImageScrollView>
         </View>
@@ -162,7 +204,7 @@ const styles = StyleSheet.create({
     },
     adress: {
         fontSize: 15,
-        marginTop:10,
+        marginTop: 10,
     },
     section: {
         padding: 20,

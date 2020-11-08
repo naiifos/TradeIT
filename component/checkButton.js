@@ -4,33 +4,16 @@ import * as firebase from "firebase";
 import 'firebase/firestore';
 const checkButton = (props) => {
 
-    const currentUser =firebase.auth().currentUser.email;
-    /*
+    
     useEffect(() => {
         
-        firebase.firestore()
-        .collection('Post')
-        .onSnapshot(querySnapshot => {
-            const users = [];
-
-            querySnapshot.forEach(documentSnapshot => {
-                users.push({
-                    ...documentSnapshot.data(),
-                    key: documentSnapshot.id,
-                });
-            });
-            setData(users);
-            setFullData(users)
-            setLoading(false)
-
-        
-        });
+        console.log(" nom du user connecté "+firebase.auth().currentUser.email )
+        console.log(" nom du user qui a posté  " +props.user )
     }, []);
-    */
-    const user = "fcbarcelone@outlook.com";
+    
     /*check if the current user is the one who posted */
   
-    if(currentUser === user){
+    if(firebase.auth().currentUser.email === props.user){
 
         console.log(" the user is the same ")
 
@@ -57,6 +40,11 @@ const checkButton = (props) => {
         )
     }
     
+
+    function goRedirection(){
+
+        console.log(" nothing to show")
+    }
    
 
 
