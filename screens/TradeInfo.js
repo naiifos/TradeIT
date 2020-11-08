@@ -37,21 +37,19 @@ export default function TradeInfo({ route }) {
     const { state } = route.params;
     const { location } = route.params;
     const { image } = route.params;
-    const { id } = route.params;
     const { user } = route.params;
     const [latitude, setLatitude] = useState("null")
     const [longitude, setLongitude] = useState("null")
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
 
-    function goRedirection(){
-        alert(" redirection to chatBox")
+    function goRedirection() {
+    
 
         navigation.navigate('ChatBox', {
 
             name: firebase.auth().currentUser.email,
-            date:  new Date().getDate(),
+            date: new Date().getDate(),
 
         });
     }
@@ -59,33 +57,6 @@ export default function TradeInfo({ route }) {
     useEffect(() => {
 
 
-        const results = firebase.firestore()
-            .collection('User')
-            .doc(user)
-            .get()
-            .then(function (doc) {
-                if (doc.exists) {
-                    parseInt(doc.data().Latitude)
-                    parseInt(doc.data().Longitude)
-
-                    setLatitude(doc.data().Latitude);
-                    setLongitude(doc.data().Longitude);
-
-
-                    console.log(typeof longitude)
-                    console.log(typeof latitude)
-                    //     setIsLoading(false);
-                } else {
-                    console.log("No such document!");
-                }
-            }).catch(function (error) {
-                console.log("Error getting document:", error);
-            });
-
-        return () => results
-    }, [])
-
-    useEffect(() => {
 
         const results = firebase.firestore()
             .collection('User')
@@ -99,9 +70,9 @@ export default function TradeInfo({ route }) {
                     setLatitude(doc.data().Latitude);
                     setLongitude(doc.data().Longitude);
 
-
-                    console.log(typeof longitude)
-                    console.log(typeof latitude)
+                    //  console.log(" user who posted " + user  + " location = " + doc.data().Latitude + "//"+doc.data().Longitude)
+                    //     console.log(typeof longitude)
+                    //     console.log(typeof latitude)
                     //     setIsLoading(false);
                 } else {
                     console.log("No such document!");
@@ -112,6 +83,8 @@ export default function TradeInfo({ route }) {
 
         return () => results
     }, [])
+
+
 
     if (loading) {
         return (
