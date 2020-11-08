@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from 'react-native-animatable';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import CheckButton from '../component/CheckButton';
+import ChatBox from '../screens/ChatBox';
 import * as firebase from "firebase";
 import 'firebase/firestore';
 const { width, height } = Dimensions.get('window')
@@ -45,9 +45,48 @@ export default function TradeInfo({ route }) {
     const [loading, setLoading] = useState(false);
 
 
+    function goRedirection(){
+        alert(" redirection to chatBox")
+
+        navigation.navigate('ChatBox', {
+
+            name: firebase.auth().currentUser.email,
+            date:  new Date().getDate(),
+          
+        });
+    }
+
     useEffect(() => {
 
 
+
+        const results = firebase.firestore()
+            .collection('User')
+            .doc(user)
+            .get()
+            .then(function (doc) {
+                if (doc.exists) {
+                    parseInt(doc.data().Latitude)
+                    parseInt(doc.data().Longitude)
+
+                    setLatitude(doc.data().Latitude);
+                    setLongitude(doc.data().Longitude);
+
+
+                    console.log(typeof longitude)
+                    console.log(typeof latitude)
+                    //     setIsLoading(false);
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function (error) {
+                console.log("Error getting document:", error);
+            });
+
+        return () => results
+    }, [])
+
+    useEffect(() => {
 
         const results = firebase.firestore()
             .collection('User')
@@ -162,7 +201,7 @@ export default function TradeInfo({ route }) {
                             (
                                 <Button
                                     title="Trade IT ?"
-                                    color="#f7287b"
+                                    icolor="#f7287b"
                                     fontSize="12"
                                     onPress={() => goRedirection()}
                                 />

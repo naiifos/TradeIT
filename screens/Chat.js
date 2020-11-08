@@ -19,7 +19,6 @@ export default function Chat(){
 
             name: item.name,
             date: item.date,
-            comment: item.comment,
         });
     }
 
