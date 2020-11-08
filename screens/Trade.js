@@ -27,6 +27,7 @@ export default function Trade() {
     };
     const tradePage = (item) => {
 
+        console.log("user email = "+item.User)
         navigation.navigate('TradeInfo', {
 
             title: item.Title,
@@ -35,6 +36,8 @@ export default function Trade() {
             state: item.Etat,
             location: item.Location,
             description: item.Description,
+            user: item.User,
+            id: item.key,
         });
 
     }
