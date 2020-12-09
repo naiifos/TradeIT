@@ -94,7 +94,7 @@ export default function Trade() {
                     value={searchTerm}
                     onChangeText={text => handleSearch(text)}
                     placeholder="Search"
-                    style={{ backgroundColor: '#fff', paddingHorizontal: 20 }}
+                    style={{ backgroundColor: '#ffffff', paddingHorizontal: 20 }}
                 />
             </View>
             <FlatList

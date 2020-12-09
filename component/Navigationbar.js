@@ -9,9 +9,12 @@ import Create from '../screens/Create';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 import TradeInfo from '../screens/TradeInfo';
-import ChatBox from '../screens/ChatBox';
 import Chat from '../screens/Chat';
+
+import ChatBoxTradeInfo from '../screens/ChatBoxTradeInfo';
+import ChatBoxChat from '../screens/ChatBoxChat';
 import YourLocalisation from '../screens/YourLocalisation';
+
 import { AuthContext } from '../component/Context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -19,7 +22,6 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
-import LoadingScreen from '../screens/LoadingScreen';
 
 
 const size = 20;
@@ -90,9 +92,9 @@ function TradeStackScreen() {
 
                 }}
             />
-            <TradeStack.Screen name="ChatBox" component={ChatBox}
-                options={{
-                    title: 'Chat Box',
+            <TradeStack.Screen name="ChatBoxTradeInfo" component={ChatBoxTradeInfo}
+                options={({ route }) => ({
+                    title: route.params.name,
                     headerStyle:
                     {
                         backgroundColor: '#f7287b',
@@ -109,7 +111,8 @@ function TradeStackScreen() {
                     headerTintColor: '#fff',
 
 
-                }}
+                })}
+              
             />
 
         </TradeStack.Navigator>
@@ -253,8 +256,43 @@ function ChatNavigation() {
     return (
         <ChatStackNavigator.Navigator initialRouteName="Chat"  >
 
-            <ChatStackNavigator.Screen name="Chat" component={Chat} />
-            <ChatStackNavigator.Screen name="ChatBox" component={ChatBox} />
+            <ChatStackNavigator.Screen name="Chat" component={Chat}
+                                       options={{
+                                           headerStyle: {
+                                               backgroundColor: '#f7287b',
+                                           },
+                                           headerTitleStyle: {
+                                               position: 'absolute',
+                                               color: 'white',
+                                               left: -170,
+                                               top: -10,
+                                               fontSize: 25
+
+                                           },
+                                       }}
+            />
+            <ChatStackNavigator.Screen name="ChatBoxChat" component={ChatBoxChat}
+                                       options={({ route }) => ({
+                                           title: route.params.name,
+                                           headerStyle:
+                                               {
+                                                   backgroundColor: '#f7287b',
+                                               },
+
+                                           headerTitleStyle:
+                                               {
+                                                   color: 'white',
+                                                   fontWeight: 'bold',
+                                                   marginTop: 4,
+                                                   fontSize: 20,
+
+                                               },
+                                           headerTintColor: '#fff',
+
+
+                                       })}
+
+            />
 
         </ChatStackNavigator.Navigator>
     );
@@ -265,9 +303,9 @@ export default function App() {
 
 
     return (
-        <Drawer.Navigator initialRouteName="Trade" drawerContent={props => <CustomDrawerContent {...props} />} >
+        <Drawer.Navigator initialRouteName="Create" drawerContent={props => <CustomDrawerContent {...props} />} >
             <Drawer.Screen name="Trade IT" component={AppScreen} />
-            <Drawer.Screen name="Chat" component={ChatNavigation}
+            <Drawer.Screen name="Contacts" component={ChatNavigation}
                 options={{
 
                     drawerIcon: (({ focused }) => <Icon

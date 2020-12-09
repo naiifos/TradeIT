@@ -1,37 +1,84 @@
-import React, {useState} from 'react'
+
+import React, {useState,useEffect} from 'react'
 import {Button, View, Text, StyleSheet, ScrollView, FlatList} from 'react-native';
 import ChatCard from "./ChatCard";
 import {useNavigation} from "@react-navigation/native";
-import ChatBox from "./ChatBox";
-
+import ChatBoxTradeInfo from "./ChatBoxTradeInfo";
+import {ActivityIndicator} from "react-native-paper";
+import {firestore} from "firebase";
+import * as firebase from "firebase";
 export default function Chat(){
     const navigation = useNavigation()
-    const [info, setInfo] = useState([
-        /* Pull the data from DB, get all the trades adverts and store them in to tradesAdverts hook*/
-        {id:'1',name: 'moun', date: '12:20', comment: "hi man"},
-        {id:'2',name: 'souf', date: '12/11/2020', comment: "whats'up"},
-        {id:'3',name: 'moh', date: '14/10/2020', comment: "bonjour je vous contacte pour la voiture"}
-    ]);
+
     function chatClicked(item){
 
-        navigation.navigate('ChatBox', {
+        const name = (item.name === currentuser)?item.otherUser:item.name;
+        console.log(" data to be passed from Chat = "+ item._id + " opening chat with " +name)
 
-
-            name: item.name,
-            date: item.date,
+        navigation.navigate('ChatBoxChat', {
+            name: name,
+            thread:item._id
         });
     }
 
+    const [threads, setThreads] = useState([])
+    const [loading, setLoading] = useState(true)
+    const currentuser = firebase.auth().currentUser.name;
+    useEffect(() => {
+        const unsubscribe = firestore()
+            .collection('MESSAGE_THREADS')
+            .orderBy('latestMessage.createdAt', 'desc')
+            .onSnapshot(querySnapshot => {
+                const threadsResult = querySnapshot.docs.map(documentSnapshot => {
+
+                    return {
+                        _id: documentSnapshot.id,
+                        name: '',
+                        latestMessage: { text: '' },
+                        ...documentSnapshot.data()
+                    }
+                })
+                setThreads(threadsResult)
+                if (loading) {
+
+                    const finalThreads  =[];
+                    threadsResult.forEach(getArrayValues);
+                    setThreads(finalThreads)
+
+                    setLoading(false)
+                    function getArrayValues(item, index) {
+
+                        if(item.name === currentuser||item.otherUser === currentuser)
+                        {
+                            item.name=(item.name===currentuser)?item.otherUser:item.name;
+                            finalThreads.push(item);
+                      //      console.log( index + ":" + item.name + " "+item.otherUser);
+
+
+                        }
+
+                    }
+                }
+            })
+        return () => unsubscribe()
+    }, [])
+
+    if (loading) {
+        return <ActivityIndicator size='large' color='#555' />
+    }
     return (
         <View style={styles.container}>
             <FlatList
-                data={info}
-                keyExtractor={item => item.id}
+                data={threads}
+                keyExtractor={(item) => {
+                    return item.id;
+                }}
+
                 renderItem={({item}) => (
                     <ChatCard
+                        key={item.id}
                         name={item.name}
-                        date={item.date}
-                        comment={item.comment}
+                        comment={item.latestMessage.text.slice(0, 90)}
                         onPress={() =>   chatClicked(item)}
                     />
                 )}
@@ -41,8 +88,7 @@ export default function Chat(){
 }
 const styles = StyleSheet.create({
     container:{
-        marginTop:120,
-        borderTopWidth:1,
+        marginTop:10,
     },
 
 });
