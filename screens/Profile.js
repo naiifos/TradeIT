@@ -2,6 +2,8 @@
 import {StatusBar} from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
 import {firebaseConfig} from '../config';
+
+import { useIsFocused } from "@react-navigation/native";
 import {
     StyleSheet,
     Text,
@@ -174,40 +176,49 @@ const Pagination = ({scrollX, data}) => {
         </View>
     );
 };
+
 export default function Profile({navigation}) {
+    const isFocused = useIsFocused();
     const scrollX = React.useRef(new Animated.Value(0)).current;
     const [result, setResult] = useState([]);
     const [butState, setButState] = useState(false);
     let count=0;
     useEffect(() => {
-                firebase.firestore().collection("Post").where("User", "==", firebase.auth().currentUser.email)
-                    .get()
-                    .then(function (querySnapshot) {
-                        const data=[];
-                        console.log("into useeffect");
-                        querySnapshot.forEach(function (doc) {
-                            if(count===0){
-                                itemToDelete=doc.id;
-                            }
-                            count++;
-                            data.push({type:'Human',imageUri:doc.data().Image,heading:doc.data().Title,
-                                description:doc.data().Description, key:doc.id,color:'#9dcdfa'});
-                        });
-                        setResult(data);
-                    })
-                    .catch(function (error) {
-                        console.log("Error getting documents: ", error);
+        if(isFocused)
+        {
+            console.log(" isFocused")
+            firebase.firestore().collection("Post")
+                .where("User", "==", firebase.auth().currentUser.email)
+                .get()
+                .then(function (querySnapshot) {
+                    const data=[];
+                    querySnapshot.forEach(function (doc) {
+                        if(count===0){
+                            itemToDelete=doc.id;
+                        }
+                        count++;
+                        data.push({type:'Human',imageUri:doc.data().Image,heading:doc.data().Title,
+                            description:doc.data().Description, key:doc.id,color:'#9dcdfa'});
                     });
-    }, [butState,navigation]);
+
+                    setResult(data);
+                })
+                .catch(function (error) {
+                    console.log("Error getting documents: ", error);
+                });
+        }
+    }, [isFocused,butState]);
+
     const deletePost= () => {
-        setButState(!butState);
-        console.log(" item to delete = "+ itemToDelete)
+        alert(" item to delete = "+ itemToDelete)
+        setButState(!butState)
         firebase.firestore().collection("Post").doc(itemToDelete).delete().then(function() {
             //ajouter un code qui va supprimer aussi en local dans results
             console.log("Document successfully deleted!");
         }).catch(function(error) {
             console.error("Error removing document: ", error);
         });
+
     }
     const onViewRef = React.useRef((viewableItems)=> {
 
@@ -218,6 +229,38 @@ export default function Profile({navigation}) {
     })
 
     const viewConfigRef = React.useRef({ viewAreaCoveragePercentThreshold: 50 })
+    const typography = StyleSheet.create({
+        header: {
+            color: "#f7287b",
+            fontSize: 25,
+            marginBottom: 36
+        }
+    });
+    const page = StyleSheet.create({
+
+        text: {
+            flex: 1,
+            color: "#000",
+            fontSize: 14,
+            margin:30,
+            fontWeight: "bold"
+        },
+    });
+    const flattenStyle = StyleSheet.flatten([
+        page.text,
+        typography.header
+    ]);
+    if(result.length===0)
+    {
+        return (
+            <View style={styles.container}>
+                <StatusBar style='auto' hidden/>
+
+                <Ticker scrollX={scrollX} data={result}/>
+                <Text style={flattenStyle}>You don't have any posts</Text>
+            </View>
+        );
+    }
     return (
         <View style={styles.container}>
             <StatusBar style='auto' hidden/>
@@ -242,7 +285,7 @@ export default function Profile({navigation}) {
                 />
             <Pagination scrollX={scrollX} data={result}/>
             <Ticker scrollX={scrollX} data={result}/>
-            <Button style={{  color:"#f7287b"}}title="DELETE" onPress={deletePost}/>
+            <Button style={{  color:"#f7287b"}} title="DELETE" onPress={deletePost}/>
         </View>
     );
 }

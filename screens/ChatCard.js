@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
         flex:1,
         flexWrap:'wrap',
         borderBottomWidth:1,
+
+        borderColor: '#f7287b'
     },
     nameDate:{
         flexDirection:'row',
@@ -58,6 +60,8 @@ const styles = StyleSheet.create({
     },
     comment:{
         flex:1,
+        marginTop:10,
+        color:'#a9a9a9'
     },
 });
 export default ChatCard

@@ -18,19 +18,22 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from 'react-native-animatable';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import ChatBox from '../screens/ChatBox';
 import * as firebase from "firebase";
 import 'firebase/firestore';
+import {auth, firestore} from "firebase";
+import Geocoder from 'react-native-geocoding';
+
+// Initialize the module (needs to be done only once)
 const { width, height } = Dimensions.get('window')
 
 const MIN_HEIGHT = Platform.OS === 'ios' ? 90 : 55;
 const MAX_HEIGHT = 350;
 
 export default function TradeInfo({ route }) {
-
+    console.log("-------------------Trade Info----------------------------")
     const navigation = useNavigation();
     const navTitleView = useRef(null);
-
+    const currentUser = firebase.auth().currentUser.name;
     const { name } = route.params;
     const { title } = route.params;
     const { description } = route.params;
@@ -40,23 +43,93 @@ export default function TradeInfo({ route }) {
     const { user } = route.params;
     const [latitude, setLatitude] = useState("null")
     const [longitude, setLongitude] = useState("null")
+    const [adress, setAdress] = useState("")
     const [loading, setLoading] = useState(false);
-
-
-    function goRedirection() {
-    
-
-        navigation.navigate('ChatBox', {
-
-            name: firebase.auth().currentUser.email,
-            date: new Date().getDate(),
-
+    const currentuser = firebase.auth().currentUser.name;
+    const [contactCheck, setContactCheck] = useState(false)
+    console.log(" current user = " +currentUser)
+    /*
+    *la methode permet de verifier si le user a deja creer un chat avec une personne ou pas
+     */
+    function navigationRedirect(data) {
+        console.log(" data to be passed from Trade Info = "+ data)
+        navigation.navigate('Contacts', {
         });
     }
+    function goRedirection() {
+
+
+        firebase.firestore()
+            .collection('MESSAGE_THREADS')
+            .orderBy('latestMessage.createdAt', 'desc')
+            .onSnapshot((docSnapshot) => {
+                   // const dataSource = [];
+                const dataSource = docSnapshot.docs.map(documentSnapshot => {
+                    return {
+                        id: documentSnapshot.id,
+                        name: documentSnapshot.data().name,
+                        otherUser: documentSnapshot.data().otherUser
+                    }
+                })
+                        const finalData = [];
+                         dataSource.forEach(getArrayValues);
+
+                        function getArrayValues(item, index) {
+
+                            if ((item.name === currentuser && item.otherUser === name)|| (item.name === name && item.otherUser === currentuser))
+                            {
+                                item.name = (item.name === currentuser) ? item.otherUser : item.name;
+                                finalData.push(item);
+
+                            }
+                        }
+
+                        if (finalData.length === 0) {
+                       //     console.log(" aucun chat crée avec " + name + " et " + currentUser)
+                           // alert(name+ " added to your contacts, go on contacts menu and say hi");
+                            firestore()
+                                .collection('MESSAGE_THREADS')
+                                .add({
+                                    name: name,
+                                    otherUser: currentUser,
+                                    latestMessage: {
+                                        text: `Say hi to ${name}`,
+                                        createdAt: new Date().getTime()
+                                    }
+                                })
+                                .then(docRef => {
+                                //    console.log(" value of finalData table = " + docRef.id);
+                                    docRef.collection('MESSAGES')
+                                        .add({
+                                            text: `Chat with ${name} created. Welcome!`,
+                                            createdAt: new Date().getTime(),
+                                            system: true
+                                        })
+                                        .then(() => {
+                                            console.log("  ")
+                                            navigationRedirect();
+
+                                        })
+                                })
+
+
+
+                        } else {
+                         //   alert(name+ " is already in your contacts");
+
+                            //  console.log(" un chat est deja existant avec " + name + " et " +currentUser +" id du chat = " +finalData[0].id)
+                          //  console.log(" value of finalData " + finalData);
+
+                            navigationRedirect();
+                            setContactCheck(true);
+
+                        }
+
+            })
+    }
+
 
     useEffect(() => {
-
-
 
         const results = firebase.firestore()
             .collection('User')
@@ -66,15 +139,47 @@ export default function TradeInfo({ route }) {
                 if (doc.exists) {
                     parseInt(doc.data().Latitude)
                     parseInt(doc.data().Longitude)
+                    const latitude =doc.data().Latitude
+                    const longitude =doc.data().Longitude
+                    const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
+
+
+                    getAddressFromCoordinates(doc.data().Latitude,doc.data().Longitude)
+                        .then((resJson) => {
+                            console.log("TRADE INFO ADRESS  = "+resJson)
+                            setAdress(resJson);
+                        })
+                    function getAddressFromCoordinates( latitude, longitude ) {
+
+                        return new Promise((resolve) => {
+                            const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
+                            const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?apiKey=${HERE_API_KEY}&mode=retrieveAddresses&prox=${latitude},${longitude}`
+                            fetch(url)
+                                .then(res => res.json())
+                                .then((resJson) => {
+                                    // the response had a deeply nested structure :/
+                                    if (resJson
+                                        && resJson.Response
+                                        && resJson.Response.View
+                                        && resJson.Response.View[0]
+                                        && resJson.Response.View[0].Result
+                                        && resJson.Response.View[0].Result[0]) {
+                                        resolve(resJson.Response.View[0].Result[0].Location.Address.Label)
+                                    } else {
+                                        resolve()
+                                    }
+                                })
+                                .catch((e) => {
+                                    console.log('Error in getAddressFromCoordinates', e)
+                                    resolve()
+                                })
+                        })
+                    }
 
                     setLatitude(doc.data().Latitude);
                     setLongitude(doc.data().Longitude);
 
-                    //  console.log(" user who posted " + user  + " location = " + doc.data().Latitude + "//"+doc.data().Longitude)
-                    //     console.log(typeof longitude)
-                    //     console.log(typeof latitude)
-                    //     setIsLoading(false);
-                } else {
+                }else {
                     console.log("No such document!");
                 }
             }).catch(function (error) {
@@ -83,8 +188,6 @@ export default function TradeInfo({ route }) {
 
         return () => results
     }, [])
-
-
 
     if (loading) {
         return (
@@ -112,7 +215,7 @@ export default function TradeInfo({ route }) {
                 )}
                 renderFixedForeground={() => (
                     <Animatable.View style={styles.navTitleView} ref={navTitleView}>
-                        <Text style={styles.navTitle}></Text>
+                        <Text style={styles.navTitle}/>
                     </Animatable.View>
                 )}>
 
@@ -136,7 +239,6 @@ export default function TradeInfo({ route }) {
                         </View>
                     </View>
 
-                    <Text style={styles.adress}>{location}</Text>
 
 
 
@@ -157,11 +259,12 @@ export default function TradeInfo({ route }) {
                         }}>
                         <MapView.Marker
                             coordinate={{
-                                latitude: latitude,
-                                longitude: longitude,
-                            }}
-                            description={location}
+                                latitude:latitude,
+                                longitude:longitude}}
+                                title={name+" location"}
+                                description={adress}
                         />
+                      
                     </MapView>
 
 
@@ -172,7 +275,7 @@ export default function TradeInfo({ route }) {
                         user !== firebase.auth().currentUser.email ?
                             (
                                 <Button
-                                    title="Trade IT ?"
+                                    title="Add to contacts"
                                     icolor="#f7287b"
                                     fontSize="12"
                                     onPress={() => goRedirection()}
