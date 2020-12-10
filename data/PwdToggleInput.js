@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, Button} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, Button, Platform} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import * as firebase from "firebase";
 
@@ -17,8 +17,23 @@ export default function pwdToggleInput() {
     const [newTextVerif, setNewTextVerif] = useState("");
     const [newIconName, setNewIconName] = useState("eye");
     //
-    const [isNotifEnabled, setIsNotifEnabled] = useState(true);//notif are enabled (donc on recoit les notifs)
-    const toggleNotifSwitch = () => setIsNotifEnabled(previousState => !previousState);
+    const [isNotifEnabled, setIsNotifEnabled] = useState( firebase.auth().currentUser.Notification);//notif are enabled (donc on recoit les notifs)
+    const toggleNotifSwitch = () =>
+        setIsNotifEnabled(previousState => !previousState);
+
+    firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+            .set({
+                DarkTheme: false,
+                Notification: isNotifEnabled,
+                Latitude: firebase.auth().currentUser.latitude,
+                Longitude: firebase.auth().currentUser.longitude,
+                Name: firebase.auth().currentUser.name,
+            })
+            //ensure we catch any errors at this stage to advise us if something does go wrong
+            .catch(error => {
+                console.log('Something went wrong with added user to firestore: ', error);
+            })
+
 
     //Firebase
     const userEmail =firebase.auth().currentUser ? firebase.auth().currentUser.email : "user pas connue";
@@ -68,6 +83,30 @@ export default function pwdToggleInput() {
             ;
         }
     }
+
+    useEffect(() => {
+        alert(" Value of notification user  = "+firebase.auth().currentUser.Notification);
+
+
+        firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+            .get()
+            .then(function (doc) {
+
+                if (doc.exists) {
+
+                    alert(" value of notification in firebase = "+ doc.data().Notification)
+                    firebase.auth().currentUser.Notification = doc.data().Notification
+                    alert(" changing value of notification to = "+firebase.auth().currentUser.Notification);
+                    setIsNotifEnabled( doc.data().Notification)
+
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function (error) {
+            console.log("Error getting document:", error);
+        });
+
+    }, []);
     return (
         <View>
             <View style={styles.pwdView}>

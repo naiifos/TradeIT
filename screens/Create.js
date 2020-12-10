@@ -13,6 +13,8 @@ import Input from '../component/Input';
 import * as firebase from "firebase";
 import 'firebase/firestore';
 import { useNavigation } from "@react-navigation/native";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 //import * as Notifications from 'expo-notifications';
 const Create = () => {
@@ -63,12 +65,7 @@ const Create = () => {
 
             if (goPush) {
                 alert(" Successful data")
-                //alert(form.location +"Name user = "+)
-
-
                 pushData();
-
-
             } else {
 
             }
@@ -148,18 +145,31 @@ const Create = () => {
     }
     function pushData() {
 
+        firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
+            .get()
+            .then(function (doc) {
+
+                if (doc.exists)
+                {
+                    firebase.auth().currentUser.Notification = doc.data().Notification
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function (error) {
+            console.log("Error getting document:", error);
+        });
+
         setIsLoading(true)
         const imageName = getShorterName(JSON.stringify(selectedImage))
         uploadImageFirebaseStorage(selectedImage, imageName).then(() => {
-            // alert("success");
-
-        //     schedulePushNotification().then(() => { setIsLoading(false) })
-
+            if(firebase.auth().currentUser.Notification)
+            {
+                schedulePushNotification().then(() => {   setIsLoading(false)})
+            }
+            setIsLoading(false)
         }).catch(error => {
-            //  alert(error.name);
             console.log(error)
         })
-
     }
     const uploadImageFirebaseStorage = async (uri, imageName) => {
 
@@ -268,11 +278,11 @@ const Create = () => {
 
                 const latitude =position.coords.latitude
                 const longitude =position.coords.longitude
-                const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
 
                 firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
                     .set({
                         DarkTheme: false,
+                        Notification: firebase.auth().currentUser.Notification,
                         Latitude: latitude,
                         Longitude: longitude,
                         Name: firebase.auth().currentUser.name,
@@ -308,6 +318,7 @@ const Create = () => {
 
             <View style={styles.container}>
                 <Input text={"Title of trade"} placeholder={"Introduce the trade name "} value={form.title} onChange={(text) => setForm({ ...form, title: text })} />
+                <Input text={"Location"} placeholder={"Introduce the location "} value={form.location} onChange={(text) => setForm({ ...form, location: text })} />
                 <Input text={"Description"} placeholder={"Introduce the description "} value={form.description} onChange={(text) => setForm({ ...form, description: text })} />
                 <Separator />
                 <DropDownPicker style={styles.dropDownList}

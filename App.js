@@ -7,7 +7,8 @@ import Navigationbar from "./component/Navigationbar";
 import { firebaseConfig } from "./config";
 import { AuthContext } from './component/Context';
 import * as Notifications from 'expo-notifications';
-
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 import {
     View,
     Platform,
@@ -80,6 +81,7 @@ export default function App() {
                                 Latitude: firebase.auth().currentUser.latitude,
                                 Longitude: firebase.auth().currentUser.longitude,
                                 Name: firebase.auth().currentUser.name,
+                                Notification: true
                             })
                             //ensure we catch any errors at this stage to advise us if something does go wrong
                             .catch(error => {
@@ -104,6 +106,7 @@ export default function App() {
                             firebase.auth().currentUser.name = doc.data().Name
                             firebase.auth().currentUser.latitude = doc.data().Latitude
                             firebase.auth().currentUser.longitude = doc.data().Longitude
+                            firebase.auth().currentUser.Notification = doc.data().Notification
                             setUserToken(firebase.auth().currentUser)
                             setIsLoading(false);
                         } else {
