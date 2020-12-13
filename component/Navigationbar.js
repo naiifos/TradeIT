@@ -305,7 +305,7 @@ export default function App() {
     return (
         <Drawer.Navigator initialRouteName="Create" drawerContent={props => <CustomDrawerContent {...props} />} >
             <Drawer.Screen name="Trade IT" component={AppScreen} />
-            <Drawer.Screen name="Contacts" component={ChatNavigation}
+            <Drawer.Screen name="Messages" component={ChatNavigation}
                 options={{
 
                     drawerIcon: (({ focused }) => <Icon

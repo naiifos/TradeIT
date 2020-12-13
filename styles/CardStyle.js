@@ -105,7 +105,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
 
-  cardLocation: {
+  cardDate: {
     marginEnd:4,
     fontSize: 11.5,
     color:"white",

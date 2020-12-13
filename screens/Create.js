@@ -26,7 +26,6 @@ const Create = () => {
     const [adress, setAdress] = useState("")
     const [form, setForm] = useState({
         title: "",
-        location: "",
         description: ""
     })
     const [pickState, setPickState] = useState("New");
@@ -53,11 +52,7 @@ const Create = () => {
                 goPush = false;
                 alert("Title must have less than 13 characters and  more than 4")
             }
-            if (form.location.length > 5) {
-            } else {
-                goPush = false;
-                alert("Put a location with at least 5 characters ")
-            }
+
             if (selectedImage === null) {
                 goPush = false;
                 alert(" You must take an image of what you want to trade")
@@ -85,64 +80,6 @@ const Create = () => {
         });
     }
 
-    function getCoordinates(){
-
-       firebase.firestore()
-            .collection('User')
-            .doc(firebase.auth().currentUser.email)
-            .get()
-            .then(function (doc) {
-                if (doc.exists) {
-                    parseInt(doc.data().Latitude)
-                    parseInt(doc.data().Longitude)
-                    const latitude =doc.data().Latitude
-                    const longitude =doc.data().Longitude
-                    const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
-
-
-                    getAddressFromCoordinates(doc.data().Latitude,doc.data().Longitude)
-                        .then((resJson) => {
-                            console.log("adress = "+resJson)
-
-                            setAdress(resJson);
-                        })
-                    function getAddressFromCoordinates( latitude, longitude ) {
-
-                        return new Promise((resolve) => {
-                            const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
-                            const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?apiKey=${HERE_API_KEY}&mode=retrieveAddresses&prox=${latitude},${longitude}`
-                            fetch(url)
-                                .then(res => res.json())
-                                .then((resJson) => {
-                                    // the response had a deeply nested structure :/
-                                    if (resJson
-                                        && resJson.Response
-                                        && resJson.Response.View
-                                        && resJson.Response.View[0]
-                                        && resJson.Response.View[0].Result
-                                        && resJson.Response.View[0].Result[0]) {
-                                        resolve(resJson.Response.View[0].Result[0].Location.Address.Label)
-                                        console.log(resJson.Response.View[0].Result[0].Location.Address.Label)
-                                    } else {
-                                        resolve()
-                                    }
-                                })
-                                .catch((e) => {
-                                    console.log('Error in getAddressFromCoordinates', e)
-                                    resolve()
-                                })
-                        })
-                    }
-
-
-                }else {
-                    console.log("No such document!");
-                }
-            }).catch(function (error) {
-                console.log("Error getting document:", error);
-            });
-
-    }
     function pushData() {
 
         firebase.firestore().collection('User').doc(firebase.auth().currentUser.email)
@@ -187,13 +124,13 @@ const Create = () => {
             await ref.put(blob);
             let imageRef = firebase.storage().ref('images/' + imageName);
             const url = await imageRef.getDownloadURL();
-           
+            let today = new Date().toLocaleDateString()
             firebase.firestore().collection('Post')
             .add({
                 Description: form.description,
                 Etat: pickState,
                 Image: url,
-                Location: form.location,
+                CreatedAt:today,
                 Name: userToken.name,
                 Title: form.title,
                 User: userToken.email,
@@ -210,65 +147,8 @@ const Create = () => {
     const Separator = () => (
         <View style={styles.separator} />
     );
-  /*  useEffect(() => {
-
-        const results = firebase.firestore()
-            .collection('User')
-            .doc(firebase.auth().currentUser.email)
-            .get()
-            .then(function (doc) {
-                if (doc.exists) {
-                    parseInt(doc.data().Latitude)
-                    parseInt(doc.data().Longitude)
-                    const latitude =doc.data().Latitude
-                    const longitude =doc.data().Longitude
-                    const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
-
-                    console.log(" current position Create = " +latitude + " "+longitude)
-                    getAddressFromCoordinates(doc.data().Latitude,doc.data().Longitude)
-                        .then((resJson) => {
-                            console.log("CREATE ADRESS  = "+resJson)
-                            setAdress(resJson);
-                        })
-                    function getAddressFromCoordinates( latitude, longitude ) {
-
-                        return new Promise((resolve) => {
-                            const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
-                            const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?apiKey=${HERE_API_KEY}&mode=retrieveAddresses&prox=${latitude},${longitude}`
-                            fetch(url)
-                                .then(res => res.json())
-                                .then((resJson) => {
-                                    // the response had a deeply nested structure :/
-                                    if (resJson
-                                        && resJson.Response
-                                        && resJson.Response.View
-                                        && resJson.Response.View[0]
-                                        && resJson.Response.View[0].Result
-                                        && resJson.Response.View[0].Result[0]) {
-                                        resolve(resJson.Response.View[0].Result[0].Location.Address.Label)
-                                    } else {
-                                        resolve()
-                                    }
-                                })
-                                .catch((e) => {
-                                    console.log('Error in getAddressFromCoordinates', e)
-                                    resolve()
-                                })
-                        })
-                    }
-
-                }else {
-                    console.log("No such document!");
-                }
-            }).catch(function (error) {
-                console.log("Error getting document:", error);
-            });
-
-        return () => results
-    }, [])
-
-   */
     useEffect(() => {
+
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -318,7 +198,6 @@ const Create = () => {
 
             <View style={styles.container}>
                 <Input text={"Title of trade"} placeholder={"Introduce the trade name "} value={form.title} onChange={(text) => setForm({ ...form, title: text })} />
-                <Input text={"Location"} placeholder={"Introduce the location "} value={form.location} onChange={(text) => setForm({ ...form, location: text })} />
                 <Input text={"Description"} placeholder={"Introduce the description "} value={form.description} onChange={(text) => setForm({ ...form, description: text })} />
                 <Separator />
                 <DropDownPicker style={styles.dropDownList}

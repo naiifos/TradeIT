@@ -210,7 +210,6 @@ export default function Profile({navigation}) {
     }, [isFocused,butState]);
 
     const deletePost= () => {
-        alert(" item to delete = "+ itemToDelete)
         setButState(!butState)
         firebase.firestore().collection("Post").doc(itemToDelete).delete().then(function() {
             //ajouter un code qui va supprimer aussi en local dans results
