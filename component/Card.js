@@ -6,21 +6,9 @@ import { Text, Image, View } from "react-native";
 import UserPhotoName from "../component/UserPhotoName";
 import * as firebase from "firebase";
 import 'firebase/firestore';
-export default function Card({ title, state, name, image, location, onPress }) {
+export default function Card({ title, state, name, image,date, onPress }) {
 
   const [pickedImage, setPickedImage] = useState(null);
-   const compactLocation = compactWord(location)
-
-  function compactWord(word) {
-
-    if (word.length > 15) {
-
-      var res = word.substr(0, 15);
-      return res += "...";
-    }
-    return word
-  };
-
 
   return (
     <>
@@ -32,8 +20,8 @@ export default function Card({ title, state, name, image, location, onPress }) {
             <Text style={styles.cardTitle}>{title}</Text>
 
             <Text style={styles.cardDescription}>{state}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
 
-            <Text style={styles.cardLocation}>{location}</Text>
           </View>
 
           <View style={styles.cardImage}>

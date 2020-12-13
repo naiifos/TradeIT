@@ -38,8 +38,8 @@ export default function TradeInfo({ route }) {
     const { title } = route.params;
     const { description } = route.params;
     const { state } = route.params;
-    const { location } = route.params;
     const { image } = route.params;
+    const { date } = route.params;
     const { user } = route.params;
     const [latitude, setLatitude] = useState("null")
     const [longitude, setLongitude] = useState("null")
@@ -53,7 +53,7 @@ export default function TradeInfo({ route }) {
      */
     function navigationRedirect(data) {
         console.log(" data to be passed from Trade Info = "+ data)
-        navigation.navigate('Contacts', {
+        navigation.navigate('Messages', {
         });
     }
     function goRedirection() {
@@ -74,7 +74,7 @@ export default function TradeInfo({ route }) {
                         const finalData = [];
                          dataSource.forEach(getArrayValues);
 
-                        function getArrayValues(item, index) {
+                        function getArrayValues(item) {
 
                             if ((item.name === currentuser && item.otherUser === name)|| (item.name === name && item.otherUser === currentuser))
                             {
@@ -141,18 +141,17 @@ export default function TradeInfo({ route }) {
                     parseInt(doc.data().Longitude)
                     const latitude =doc.data().Latitude
                     const longitude =doc.data().Longitude
-                    const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
+                 //   const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
+                    const HERE_API_KEY= "Z8x2Ta9e6VDhtux4YyJtzXfjnhpsAx2yn7luU7X3zaY"
 
-
-                    getAddressFromCoordinates(doc.data().Latitude,doc.data().Longitude)
+                    getAddressFromCoordinates(latitude,longitude)
                         .then((resJson) => {
-                            console.log("TRADE INFO ADRESS  = "+resJson)
+                            console.log("TRADE INFO ADRESS  getAddressFromCoordinates = "+resJson)
                             setAdress(resJson);
                         })
                     function getAddressFromCoordinates( latitude, longitude ) {
 
                         return new Promise((resolve) => {
-                            const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
                             const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?apiKey=${HERE_API_KEY}&mode=retrieveAddresses&prox=${latitude},${longitude}`
                             fetch(url)
                                 .then(res => res.json())
@@ -175,6 +174,7 @@ export default function TradeInfo({ route }) {
                                 })
                         })
                     }
+
 
                     setLatitude(doc.data().Latitude);
                     setLongitude(doc.data().Longitude);
@@ -236,9 +236,13 @@ export default function TradeInfo({ route }) {
 
                             <Text style={{ marginHorizontal: 2 }}>State:</Text>
                             <Text>{state}</Text>
-                        </View>
-                    </View>
 
+
+                        </View>
+
+
+                    </View>
+                    <Text>{date}</Text>
 
 
 
@@ -275,7 +279,7 @@ export default function TradeInfo({ route }) {
                         user !== firebase.auth().currentUser.email ?
                             (
                                 <Button
-                                    title="Add to contacts"
+                                    title={`Trade with ${name}`}
                                     icolor="#f7287b"
                                     fontSize="12"
                                     onPress={() => goRedirection()}

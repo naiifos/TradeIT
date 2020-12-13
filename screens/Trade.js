@@ -32,9 +32,9 @@ export default function Trade() {
 
             title: item.Title,
             name: item.Name,
+            date: item.CreatedAt,
             image: item.Image,
             state: item.Etat,
-            location: item.Location,
             description: item.Description,
             user: item.User,
             id: item.key,
@@ -104,8 +104,8 @@ export default function Trade() {
                         title={item.Title}
                         state={item.Etat}
                         name={item.Name}
+                        date={item.CreatedAt}
                         image={item.Image}
-                        location={item.Location}
                         onPress={() => tradePage(item)} /* faudra ajouter l'image a un moment*/
                     />
                 )}

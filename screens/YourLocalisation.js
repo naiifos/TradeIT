@@ -22,9 +22,6 @@ export default function Yourlocalisation() {
           if (doc.exists) {
             parseInt(doc.data().Latitude)
             parseInt(doc.data().Longitude)
-            const latitude =doc.data().Latitude
-            const longitude =doc.data().Longitude
-            const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
 
 
             getAddressFromCoordinates(doc.data().Latitude,doc.data().Longitude)
@@ -35,7 +32,7 @@ export default function Yourlocalisation() {
             function getAddressFromCoordinates( latitude, longitude ) {
 
               return new Promise((resolve) => {
-                const HERE_API_KEY= "bQAQCC_Dyl4b1GQuXzCnYcDDU3OoDGDX5ojO9qcJDM8"
+                const HERE_API_KEY= "Z8x2Ta9e6VDhtux4YyJtzXfjnhpsAx2yn7luU7X3zaY"
                 const url = `https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json?apiKey=${HERE_API_KEY}&mode=retrieveAddresses&prox=${latitude},${longitude}`
                 fetch(url)
                     .then(res => res.json())
